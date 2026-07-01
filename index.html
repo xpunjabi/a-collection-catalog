@@ -123,20 +123,32 @@
         </button>
       </div>
 
-      <!-- Result count -->
-      <div class="flex items-center justify-between mb-4">
+      <!-- Result count + v0.16.0: Show Sold Out toggle -->
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
         <p class="text-sm text-slate-500">
           <span x-text="filteredProducts.length"></span> products
           <span x-show="filteredProducts.length !== products.length" class="text-slate-400">
             (of <span x-text="products.length"></span>)
           </span>
         </p>
-        <select x-model="sortBy" @change="applyFilters()" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
-          <option value="newest">Newest</option>
-          <option value="price-low">Price: Low to High</option>
-          <option value="price-high">Price: High to Low</option>
-          <option value="name">Name (A-Z)</option>
-        </select>
+        <div class="flex items-center gap-3">
+          <!-- v0.16.0: Show Sold Out toggle -->
+          <label class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+            <input
+              type="checkbox"
+              x-model="showSoldOut"
+              @change="applyFilters()"
+              class="rounded text-violet-600 focus:ring-violet-500"
+            />
+            <span>Show Sold Out</span>
+          </label>
+          <select x-model="sortBy" @change="applyFilters()" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+            <option value="newest">Newest</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="name">Name (A-Z)</option>
+          </select>
+        </div>
       </div>
 
       <!-- Loading state -->
@@ -222,18 +234,39 @@
                 ></span>
               </div>
 
-              <!-- WhatsApp Order Button (always visible, no detail page needed) -->
+              <!-- v0.16.0: Bigger WhatsApp CTA (full-width, more padding) -->
               <a
                 :href="whatsappLink(product)"
                 target="_blank"
                 rel="noopener noreferrer"
                 @click="trackClick(product)"
-                class="flex items-center justify-center gap-1.5 w-full py-2.5 bg-[#25D366] hover:bg-[#1eb858] text-white rounded-lg text-xs font-bold transition-colors shadow-sm"
+                class="flex items-center justify-center gap-2 w-full py-3 bg-[#25D366] hover:bg-[#1eb858] text-white rounded-lg text-sm font-bold transition-colors shadow-md mb-2"
                 :class="{ 'opacity-50 pointer-events-none': product.availability === 'sold_out' }"
               >
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 <span>Order on WhatsApp</span>
               </a>
+
+              <!-- v0.16.0: Share + Copy Link buttons (compact row) -->
+              <div class="flex gap-1.5">
+                <button
+                  @click="shareProduct(product)"
+                  class="flex-1 flex items-center justify-center gap-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-md text-[11px] font-medium transition-colors"
+                  aria-label="Share product"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                  <span>Share</span>
+                </button>
+                <button
+                  @click="copyProductLink(product)"
+                  class="flex-1 flex items-center justify-center gap-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-md text-[11px] font-medium transition-colors"
+                  :class="{ 'bg-emerald-100 text-emerald-700': copiedProductId === product.id }"
+                  aria-label="Copy product link"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                  <span x-text="copiedProductId === product.id ? 'Copied!' : 'Copy Link'"></span>
+                </button>
+              </div>
             </div>
           </article>
         </template>
@@ -244,7 +277,7 @@
   <!-- ==================== PRODUCT DETAIL MODAL ==================== -->
   <div
     x-show="selectedProduct"
-    @click.self="selectedProduct = null"
+    @click.self="closeProduct()"
     x-transition.opacity
     class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
     style="display: none;"
@@ -252,9 +285,28 @@
     <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" @click.stop>
       <template x-if="selectedProduct">
         <div class="grid md:grid-cols-2 gap-0">
-          <!-- Image -->
-          <div class="aspect-square md:aspect-auto bg-slate-100">
-            <img :src="productImage(selectedProduct)" :alt="selectedProduct.name" class="w-full h-full object-cover" @error="onImageError($event, selectedProduct)" />
+          <!-- v0.16.0: Image area with multiple image thumbnails -->
+          <div class="bg-slate-100">
+            <div class="aspect-square">
+              <img
+                :src="productImageByIndex(selectedProduct, selectedImageIndex)"
+                :alt="selectedProduct.name"
+                class="w-full h-full object-cover"
+                @error="onImageError($event)"
+              />
+            </div>
+            <!-- v0.16.0: Thumbnail strip for multiple images -->
+            <div x-show="selectedProduct.images.length > 1" class="flex gap-1 p-2 overflow-x-auto bg-white">
+              <template x-for="(img, idx) in selectedProduct.images" :key="idx">
+                <button
+                  @click="selectImage(idx)"
+                  class="w-14 h-14 shrink-0 rounded-md overflow-hidden border-2 transition-colors"
+                  :class="selectedImageIndex === idx ? 'border-violet-600' : 'border-transparent'"
+                >
+                  <img :src="`data/images/${img}`" :alt="`Image ${idx+1}`" class="w-full h-full object-cover" @error="onImageError($event)" />
+                </button>
+              </template>
+            </div>
           </div>
           <!-- Details -->
           <div class="p-5 space-y-3">
@@ -263,7 +315,7 @@
                 <h2 class="text-xl font-bold text-slate-900" x-text="selectedProduct.name"></h2>
                 <p x-show="selectedProduct.sku" class="text-xs text-slate-500 mt-0.5">SKU: <span x-text="selectedProduct.sku"></span></p>
               </div>
-              <button @click="selectedProduct = null" class="p-1 text-slate-400 hover:text-slate-600">✕</button>
+              <button @click="closeProduct()" class="p-1 text-slate-400 hover:text-slate-600">✕</button>
             </div>
 
             <div class="flex items-baseline gap-2">
@@ -273,6 +325,11 @@
                 class="text-sm text-slate-400 line-through"
                 x-text="'Rs. ' + formatPrice(selectedProduct.retail_price)"
               ></span>
+            </div>
+
+            <!-- Sold out badge in modal -->
+            <div x-show="selectedProduct.availability === 'sold_out'" class="inline-block bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">
+              SOLD OUT
             </div>
 
             <div class="flex flex-wrap gap-2">
@@ -286,12 +343,31 @@
               <p x-text="selectedProduct.description"></p>
             </div>
 
-            <!-- WhatsApp button in detail -->
+            <!-- v0.16.0: Share + Copy buttons in modal -->
+            <div class="flex gap-2 pt-2">
+              <button
+                @click="shareProduct(selectedProduct)"
+                class="flex-1 flex items-center justify-center gap-1.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                <span>Share</span>
+              </button>
+              <button
+                @click="copyProductLink(selectedProduct)"
+                class="flex-1 flex items-center justify-center gap-1.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors"
+                :class="{ 'bg-emerald-100 text-emerald-700': copiedProductId === selectedProduct.id }"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                <span x-text="copiedProductId === selectedProduct.id ? 'Copied!' : 'Copy Link'"></span>
+              </button>
+            </div>
+
+            <!-- v0.16.0: Bigger WhatsApp button in modal -->
             <a
               :href="whatsappLink(selectedProduct)"
               target="_blank"
               rel="noopener noreferrer"
-              class="flex items-center justify-center gap-2 w-full py-3 bg-[#25D366] hover:bg-[#1eb858] text-white rounded-xl font-bold transition-colors mt-4"
+              class="flex items-center justify-center gap-2 w-full py-3.5 bg-[#25D366] hover:bg-[#1eb858] text-white rounded-xl font-bold transition-colors mt-2 shadow-md"
               :class="{ 'opacity-50 pointer-events-none': selectedProduct.availability === 'sold_out' }"
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>

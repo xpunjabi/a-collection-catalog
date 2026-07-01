@@ -1,35 +1,19 @@
 /**
- * A Collection Catalog — PWA Frontend Logic
+ * A Collection Catalog — PWA Frontend Logic v0.16.0
  *
  * Vanilla JS + Alpine.js. No build pipeline. Loads catalog.json generated
  * by Head Office. All filtering/searching happens client-side.
  *
- * catalog.json structure:
- * {
- *   "brand": "A Collection Narowal",
- *   "whatsapp_number": "923420830995",
- *   "version": "2026-07-01T12:00:00Z",
- *   "products": [
- *     {
- *       "id": 1,
- *       "name": "Nishat 3-Piece Lawn Suit - Maroon Floral",
- *       "sku": "AC-2026-001",
- *       "sale_price": 3300,
- *       "retail_price": 4000,
- *       "category": "3 Piece",
- *       "color": "Maroon",
- *       "fabric": "Lawn",
- *       "season": "Summer",
- *       "description": "...",
- *       "images": ["1730123456.webp"],
- *       "availability": "available" | "sold_out"
- *     }
- *   ]
- * }
+ * v0.16.0 improvements:
+ * - Permanent product URLs via hash routing (#/SKU12345)
+ * - Native Share button (Web Share API + fallback)
+ * - Copy Link button per product
+ * - Bigger WhatsApp CTA (full-width, more padding)
+ * - Hide sold-out by default + toggle
+ * - Multiple images in product detail modal
  */
 
 // Common color name → hex mapping for the color dot in product cards.
-// Falls back to a neutral gray for unknown colors.
 const COLOR_HEX_MAP = {
   red: '#dc2626', maroon: '#7c2d12', crimson: '#b91c1c',
   pink: '#ec4899', magenta: '#d946ef', rose: '#f43f5e',
@@ -52,11 +36,24 @@ function colorToHex(name) {
   if (!name) return '#9ca3af';
   const lower = name.toLowerCase().trim();
   if (COLOR_HEX_MAP[lower]) return COLOR_HEX_MAP[lower];
-  // Try to match a known color word within the name (e.g., "Royal Blue" → "blue")
   for (const key of Object.keys(COLOR_HEX_MAP)) {
     if (lower.includes(key)) return COLOR_HEX_MAP[key];
   }
   return '#9ca3af';
+}
+
+// Toast notification helper
+function showToast(message, duration = 2000) {
+  const toast = document.createElement('div');
+  toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2 rounded-lg shadow-xl border border-violet-500/50 text-sm font-medium';
+  toast.style.transition = 'opacity 0.3s, transform 0.3s';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translate(-50%, -10px)';
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
 }
 
 function catalogApp() {
@@ -69,8 +66,10 @@ function catalogApp() {
     sortBy: 'newest',
     showFilters: false,
     selectedProduct: null,
+    selectedImageIndex: 0,  // v0.16.0: For multiple images in modal
+    showSoldOut: false,     // v0.16.0: Hidden by default, user can toggle
+    copiedProductId: null,  // v0.16.0: For "Link Copied" feedback
 
-    // Active filter state
     filters: {
       category: '',
       fabric: '',
@@ -79,7 +78,6 @@ function catalogApp() {
       availability: '',
     },
 
-    // Computed active filters for chip display
     get activeFilters() {
       const out = [];
       if (this.filters.category) out.push({ key: 'category', value: this.filters.category, label: this.filters.category });
@@ -92,12 +90,16 @@ function catalogApp() {
 
     async init() {
       try {
-        // Cache-bust catalog.json so new publishes show immediately
         const url = `data/catalog.json?v=${Date.now()}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         this.catalog = await res.json();
         this.products = this.catalog.products || [];
+
+        // v0.16.0: Check URL hash for direct product link (#/SKU12345)
+        this.handleHashChange();
+        window.addEventListener('hashchange', () => this.handleHashChange());
+
         this.applyFilters();
       } catch (err) {
         console.error('[catalog] Failed to load catalog.json:', err);
@@ -108,8 +110,139 @@ function catalogApp() {
       }
     },
 
+    // v0.16.0: Handle URL hash for permanent product links
+    // Format: #/SKU12345 or #/product-name-slug
+    handleHashChange() {
+      const hash = window.location.hash.slice(1); // Remove #
+      if (hash.startsWith('/') && hash.length > 1) {
+        const slug = hash.slice(1); // Remove leading /
+        // Try to match by SKU first, then by name slug
+        let product = this.products.find(p => p.sku && p.sku.toLowerCase() === slug.toLowerCase());
+        if (!product) {
+          product = this.products.find(p => this.slugify(p.name) === slug);
+        }
+        if (product) {
+          this.openProduct(product);
+        }
+      }
+    },
+
+    // v0.16.0: Generate URL-safe slug from product name
+    slugify(text) {
+      return text.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .substring(0, 80);
+    },
+
+    // v0.16.0: Build permanent product URL
+    productUrl(product) {
+      const slug = product.sku || this.slugify(product.name);
+      return `${window.location.origin}${window.location.pathname}#/${slug}`;
+    },
+
+    // v0.16.0: Copy product link to clipboard
+    async copyProductLink(product) {
+      const url = this.productUrl(product);
+      try {
+        await navigator.clipboard.writeText(url);
+        this.copiedProductId = product.id;
+        showToast('✓ Link Copied!');
+        setTimeout(() => { this.copiedProductId = null; }, 2000);
+      } catch (err) {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = url;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showToast('✓ Link Copied!');
+        } catch (e) {
+          showToast('Could not copy. Long-press the URL bar to copy manually.');
+        }
+        textarea.remove();
+      }
+    },
+
+    // v0.16.0: Native Share button (Web Share API with fallback)
+    async shareProduct(product) {
+      const url = this.productUrl(product);
+      const shareData = {
+        title: product.name,
+        text: `Check out ${product.name} — Rs. ${this.formatPrice(product.sale_price)}\n\nAvailable at ${this.catalog.brand}. Order on WhatsApp!`,
+        url: url,
+      };
+
+      if (navigator.share) {
+        // Mobile + desktop browsers that support Web Share API
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.warn('[share] Web Share failed:', err);
+          }
+        }
+      } else {
+        // Desktop fallback: show a small menu with copy + social links
+        this.showShareFallback(product, url);
+      }
+    },
+
+    // v0.16.0: Fallback share menu for desktop browsers without Web Share API
+    showShareFallback(product, url) {
+      // Build a simple modal with share options
+      const waText = encodeURIComponent(`Check out ${product.name} — Rs. ${this.formatPrice(product.sale_price)}\n\n${url}`);
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4';
+      modal.innerHTML = `
+        <div class="bg-white rounded-2xl max-w-xs w-full p-5 shadow-2xl">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-900">Share Product</h3>
+            <button class="text-slate-400 hover:text-slate-600 text-xl leading-none" onclick="this.closest('.fixed').remove()">✕</button>
+          </div>
+          <div class="space-y-2">
+            <button onclick="navigator.clipboard.writeText('${url}').then(() => { showToast('✓ Link Copied!'); this.closest('.fixed').remove(); })"
+              class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 text-left">
+              <span class="text-xl">🔗</span>
+              <span class="text-sm font-medium text-slate-700">Copy Link</span>
+            </button>
+            <a href="https://wa.me/?text=${waText}" target="_blank" rel="noopener"
+              class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 text-left">
+              <span class="text-xl">💬</span>
+              <span class="text-sm font-medium text-slate-700">WhatsApp</span>
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}" target="_blank" rel="noopener"
+              class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 text-left">
+              <span class="text-xl">📘</span>
+              <span class="text-sm font-medium text-slate-700">Facebook</span>
+            </a>
+            <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(product.name + ' — Rs. ' + this.formatPrice(product.sale_price))}&url=${encodeURIComponent(url)}" target="_blank" rel="noopener"
+              class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 text-left">
+              <span class="text-xl">🐦</span>
+              <span class="text-sm font-medium text-slate-700">X (Twitter)</span>
+            </a>
+            <a href="mailto:?subject=${encodeURIComponent(product.name)}&body=${encodeURIComponent('Check out this product:\n\n' + product.name + ' — Rs. ' + this.formatPrice(product.sale_price) + '\n\n' + url)}"
+              class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 text-left">
+              <span class="text-xl">✉️</span>
+              <span class="text-sm font-medium text-slate-700">Email</span>
+            </a>
+          </div>
+        </div>
+      `;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+      });
+      document.body.appendChild(modal);
+    },
+
     applyFilters() {
       let result = [...this.products];
+
+      // v0.16.0: Hide sold-out by default (unless user toggled showSoldOut)
+      if (!this.showSoldOut) {
+        result = result.filter(p => p.availability !== 'sold_out');
+      }
 
       // Text search via Fuse.js (fuzzy)
       if (this.searchQuery.trim()) {
@@ -158,7 +291,6 @@ function catalogApp() {
       this.applyFilters();
     },
 
-    // Generate filter panel HTML (rendered via x-html for reactivity)
     filterPanelHtml() {
       const categories = this.uniqueValues('category');
       const fabrics = this.uniqueValues('fabric');
@@ -250,17 +382,27 @@ function catalogApp() {
       return Array.from(set).sort();
     },
 
-    // Product image URL — uses first image in array, falls back to placeholder
     productImage(product) {
       if (product.images && product.images.length > 0) {
         return `data/images/${product.images[0]}`;
       }
-      return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"%3E%3Crect fill="%23f3f4f6" width="300" height="400"/%3E%3Ctext x="50%25" y="50%25" font-family="sans-serif" font-size="14" fill="%239ca3af" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
+      return this.placeholderImage();
     },
 
-    onImageError(e, product) {
-      // Fallback to placeholder on broken image
-      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"%3E%3Crect fill="%23f3f4f6" width="300" height="400"/%3E%3Ctext x="50%25" y="50%25" font-family="sans-serif" font-size="14" fill="%239ca3af" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
+    // v0.16.0: Get image by index (for multiple images in modal)
+    productImageByIndex(product, index) {
+      if (product.images && product.images.length > index) {
+        return `data/images/${product.images[index]}`;
+      }
+      return this.placeholderImage();
+    },
+
+    placeholderImage() {
+      return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500"%3E%3Crect fill="%23f3f4f6" width="400" height="500"/%3E%3Ctext x="50%25" y="45%25" font-family="sans-serif" font-size="48" fill="%23d1d5db" text-anchor="middle"%3E📷%3C/text%3E%3Ctext x="50%25" y="55%25" font-family="sans-serif" font-size="14" fill="%239ca3af" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
+    },
+
+    onImageError(e) {
+      e.target.src = this.placeholderImage();
     },
 
     formatPrice(n) {
@@ -268,7 +410,6 @@ function catalogApp() {
       return Number(n).toLocaleString('en-PK');
     },
 
-    // Generate WhatsApp order link for a specific product
     whatsappLink(product) {
       const phone = (this.catalog.whatsapp_number || '').replace(/[^\d]/g, '');
       const lines = [
@@ -286,43 +427,62 @@ function catalogApp() {
       return `https://wa.me/${phone}?text=${text}`;
     },
 
-    // General WhatsApp chat link (floating button)
     generalWhatsappLink() {
       const phone = (this.catalog.whatsapp_number || '').replace(/[^\d]/g, '');
       const text = encodeURIComponent(`Assalamualaikum! I have a question about your products.`);
       return `https://wa.me/${phone}?text=${text}`;
     },
 
+    // v0.16.0: Open product modal + set URL hash for permanent link
     openProduct(product) {
       this.selectedProduct = product;
-      // Prevent body scroll when modal is open
+      this.selectedImageIndex = 0;  // Reset to first image
+
+      // Update URL hash for permanent link (without scrolling)
+      const slug = product.sku || this.slugify(product.name);
+      const newHash = `#/${slug}`;
+      if (window.location.hash !== newHash) {
+        history.pushState(null, '', newHash);
+      }
+
       document.body.style.overflow = 'hidden';
       this.$nextTick(() => {
         document.addEventListener('keydown', this.escapeHandler);
       });
     },
 
+    // v0.16.0: Close modal + clear URL hash
+    closeProduct() {
+      this.selectedProduct = null;
+      // Clear hash without scrolling
+      if (window.location.hash) {
+        history.pushState(null, '', window.location.pathname);
+      }
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', this.escapeHandler);
+    },
+
     escapeHandler(e) {
       if (e.key === 'Escape') {
-        this.selectedProduct = null;
-        document.body.style.overflow = '';
-        document.removeEventListener('keydown', this.escapeHandler);
+        this.closeProduct();
       }
     },
 
-    // Optional: track product clicks (future analytics hook)
+    // v0.16.0: Switch image in modal
+    selectImage(index) {
+      this.selectedImageIndex = index;
+    },
+
     trackClick(product) {
       console.log('[catalog] Product clicked:', product.id, product.name);
-      // Future: send to analytics endpoint
     },
   };
 }
 
-// Expose globally for Alpine
 window.catalogApp = catalogApp;
 window.colorToHex = colorToHex;
+window.showToast = showToast;
 
-// Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').then(
