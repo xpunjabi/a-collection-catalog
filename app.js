@@ -69,6 +69,10 @@ function catalogApp() {
     selectedImageIndex: 0,  // v0.16.0: For multiple images in modal
     showSoldOut: false,     // v0.16.0: Hidden by default, user can toggle
     copiedProductId: null,  // v0.16.0: For "Link Copied" feedback
+    // v0.16.2: PWA install prompt
+    deferredPrompt: null,   // Captured beforeinstallprompt event
+    canInstall: false,      // Show Install button only when prompt is available
+    isInstalled: false,     // Hide button if already installed (standalone mode)
 
     filters: {
       category: '',
@@ -100,6 +104,32 @@ function catalogApp() {
         this.handleHashChange();
         window.addEventListener('hashchange', () => this.handleHashChange());
 
+        // v0.16.2: PWA install detection
+        // Check if already running as installed PWA (standalone mode)
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+          this.isInstalled = true;
+        }
+
+        // Capture the beforeinstallprompt event (Android Chrome only)
+        // iOS Safari does NOT support this — users must use Share → Add to Home Screen
+        window.addEventListener('beforeinstallprompt', (e) => {
+          // Prevent the default browser install prompt (we'll show our own button)
+          e.preventDefault();
+          // Stash the event so it can be triggered later by our button
+          this.deferredPrompt = e;
+          this.canInstall = true;
+          console.log('[catalog] Install prompt available — showing Install button');
+        });
+
+        // Listen for successful install (hide button after install)
+        window.addEventListener('appinstalled', () => {
+          this.canInstall = false;
+          this.deferredPrompt = null;
+          this.isInstalled = true;
+          showToast('✓ App installed! Find it on your home screen.');
+          console.log('[catalog] PWA installed successfully');
+        });
+
         this.applyFilters();
       } catch (err) {
         console.error('[catalog] Failed to load catalog.json:', err);
@@ -108,6 +138,36 @@ function catalogApp() {
       } finally {
         this.loading = false;
       }
+    },
+
+    // v0.16.2: Trigger PWA install via our custom button
+    async installApp() {
+      if (!this.deferredPrompt) {
+        // iOS Safari fallback — show instructions
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+          showToast('To install: tap Share button → "Add to Home Screen"', 4000);
+        } else {
+          showToast('Install option not available. Use browser menu → "Install app" or "Add to Home screen".', 4000);
+        }
+        return;
+      }
+
+      // Show the browser's native install prompt
+      this.deferredPrompt.prompt();
+
+      // Wait for user's choice
+      const { outcome } = await this.deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('[catalog] User accepted install');
+        showToast('Installing... Check your home screen in a moment.');
+      } else {
+        console.log('[catalog] User dismissed install');
+      }
+
+      // The prompt can only be used once — clear it
+      this.deferredPrompt = null;
+      this.canInstall = false;
     },
 
     // v0.16.0: Handle URL hash for permanent product links
