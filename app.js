@@ -543,11 +543,61 @@ window.catalogApp = catalogApp;
 window.colorToHex = colorToHex;
 window.showToast = showToast;
 
+// v0.16.3: Service Worker registration with auto-update detection.
+// When a new SW version is detected, show a non-intrusive toast prompting
+// the user to refresh. This ensures customers always get the latest version
+// without needing to hard-refresh manually.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').then(
-      (reg) => console.log('[catalog] Service Worker registered'),
+      (reg) => {
+        console.log('[catalog] Service Worker registered');
+
+        // Listen for new SW versions taking control
+        // When a new SW activates (via skipWaiting + clients.claim),
+        // this event fires on the page. We show a toast asking the user
+        // to refresh — but DON'T force refresh (could interrupt their browsing).
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (refreshing) return;
+          refreshing = true;
+          console.log('[catalog] New Service Worker activated — update ready');
+          // Show a persistent toast with a refresh button
+          showUpdateToast();
+        });
+
+        // Also poll for SW updates every 60 seconds (in case the page stays
+        // open for a long time). The browser does this automatically on
+        // navigation, but we add a manual check for SPA-style apps.
+        setInterval(() => {
+          reg.update().catch(() => {});
+        }, 60000);
+      },
       (err) => console.warn('[catalog] Service Worker registration failed:', err)
     );
   });
 }
+
+// v0.16.3: Show a non-intrusive "Update available" toast with a Refresh button.
+// The toast stays visible until the user clicks Refresh or dismisses it.
+// This is the key to ensuring customers get updates without hard-refreshing.
+function showUpdateToast() {
+  // Don't show if already showing
+  if (document.getElementById('update-toast')) return;
+
+  const toast = document.createElement('div');
+  toast.id = 'update-toast';
+  toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-violet-500/50 text-sm font-medium flex items-center gap-3';
+  toast.style.transition = 'opacity 0.3s, transform 0.3s';
+  toast.innerHTML = `
+    <span>✨ New version available</span>
+    <button onclick="window.location.reload()" class="bg-violet-600 hover:bg-violet-700 text-white px-3 py-1 rounded-lg text-xs font-bold">
+      Refresh
+    </button>
+    <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white text-lg leading-none ml-1">×</button>
+  `;
+  document.body.appendChild(toast);
+}
+
+window.showUpdateToast = showUpdateToast;
+
