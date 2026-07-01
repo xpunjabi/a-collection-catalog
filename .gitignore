@@ -1,0 +1,11 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Note: data/ folder IS committed because GitHub Pages serves from the repo.
+# Head Office updates it via GitHub Contents API. Do NOT add data/ to gitignore.

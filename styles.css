@@ -1,0 +1,90 @@
+/* A Collection Catalog — Custom Styles
+ * Mobile-first, mobile-optimized. Tailwind handles most styling via CDN.
+ * This file contains only custom additions Tailwind can't do (or that need
+ * to work even before Tailwind CDN loads.
+ */
+
+/* Hide Alpine.js templates before Alpine initializes to prevent FOUC */
+[x-cloak] { display: none !important; }
+
+/* Smooth scrolling for in-page navigation */
+html { scroll-behavior: smooth; }
+
+/* Better tap targets on mobile — min 44px */
+@media (max-width: 768px) {
+  button, a, input, select {
+    min-height: 44px;
+  }
+  /* But allow smaller elements explicitly */
+  .autoh-min-none, .autoh-min-none * {
+    min-height: 0;
+  }
+}
+
+/* Line clamp utility (for product name truncation) */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 2.6em;
+  line-height: 1.3;
+}
+
+/* Loading skeleton animation */
+@keyframes pulse-bg {
+  0%, 100% { background-color: #e5e7eb; }
+  50% { background-color: #f3f4f6; }
+}
+.animate-pulse {
+  animation: pulse-bg 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Hide scrollbar on filter panel for cleaner look */
+aside::-webkit-scrollbar {
+  width: 4px;
+}
+aside::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+/* Product card hover lift effect (desktop) */
+@media (hover: hover) {
+  article:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+  }
+}
+
+/* Better mobile font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Prevent text selection on tap (mobile UX) — except for actual text content */
+button, label, .no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Safe area insets for notched phones (iPhone X+) */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .fixed.bottom-5 {
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Focus visible for keyboard navigation (accessibility) */
+*:focus-visible {
+  outline: 2px solid #7c3aed;
+  outline-offset: 2px;
+}
+
+/* Image loading placeholder color */
+img {
+  background-color: #f3f4f6;
+}

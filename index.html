@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="description" content="A Collection Narowal — Latest lawn, cotton, and embroidered suits. Order on WhatsApp." />
+  <meta name="theme-color" content="#7c3aed" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="A Collection" />
+
+  <!-- Social -->
+  <meta property="og:title" content="A Collection Narowal" />
+  <meta property="og:description" content="Latest lawn, cotton, and embroidered suits. Order on WhatsApp." />
+  <meta property="og:type" content="website" />
+
+  <title>A Collection Narowal — Online Catalog</title>
+
+  <!-- Tailwind CSS via CDN (no build pipeline) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js (3KB) for reactivity -->
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Fuse.js for fuzzy search -->
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen" x-data="catalogApp()" x-init="init()" x-cloak>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+      <!-- Brand row -->
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 bg-violet-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">A</div>
+          <div>
+            <h1 class="text-lg font-bold leading-tight" x-text="catalog.brand || 'A Collection'"></h1>
+            <p class="text-[10px] text-slate-500 leading-tight">Narowal • Online Catalog</p>
+          </div>
+        </div>
+        <button
+          @click="showFilters = !showFilters"
+          class="lg:hidden p-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition"
+          aria-label="Filters"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M6 12h12M10 20h4"/></svg>
+        </button>
+      </div>
+
+      <!-- Search bar -->
+      <div class="relative">
+        <input
+          type="search"
+          x-model="searchQuery"
+          @input="applyFilters()"
+          placeholder="Search by name, color, fabric..."
+          class="w-full bg-slate-100 border border-slate-200 rounded-full pl-11 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white"
+        />
+        <svg class="w-5 h-5 absolute left-3.5 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+        <button
+          x-show="searchQuery"
+          @click="searchQuery = ''; applyFilters()"
+          class="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
+          aria-label="Clear search"
+        >✕</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN LAYOUT ==================== -->
+  <div class="max-w-7xl mx-auto px-4 py-4 flex gap-6">
+
+    <!-- ==================== SIDEBAR (Filters) ==================== -->
+    <!-- Desktop: static sidebar; Mobile: slide-over -->
+    <aside
+      class="hidden lg:block w-64 shrink-0"
+    >
+      <div class="sticky top-24 space-y-4" x-html="filterPanelHtml()"></div>
+    </aside>
+
+    <!-- Mobile filter overlay -->
+    <div
+      x-show="showFilters"
+      @click.self="showFilters = false"
+      class="lg:hidden fixed inset-0 z-40 bg-black/40"
+      x-transition.opacity
+      style="display: none;"
+    >
+      <aside class="absolute right-0 top-0 bottom-0 w-72 bg-white shadow-xl p-4 overflow-y-auto" @click.stop>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-bold text-lg">Filters</h2>
+          <button @click="showFilters = false" class="p-1 text-slate-400">✕</button>
+        </div>
+        <div x-html="filterPanelHtml()"></div>
+      </aside>
+    </div>
+
+    <!-- ==================== PRODUCT GRID ==================== -->
+    <main class="flex-1 min-w-0">
+
+      <!-- Active filter chips -->
+      <div class="flex flex-wrap gap-2 mb-4" x-show="activeFilters.length > 0 || searchQuery">
+        <template x-for="filter in activeFilters" :key="filter.key + filter.value">
+          <button
+            @click="removeFilter(filter.key, filter.value)"
+            class="inline-flex items-center gap-1 px-3 py-1 bg-violet-100 text-violet-700 rounded-full text-xs font-medium hover:bg-violet-200"
+          >
+            <span x-text="filter.label"></span>
+            <span>✕</span>
+          </button>
+        </template>
+        <button
+          x-show="searchQuery"
+          @click="searchQuery = ''; applyFilters()"
+          class="inline-flex items-center gap-1 px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-medium hover:bg-slate-300"
+        >
+          Search: "<span x-text="searchQuery"></span>" ✕
+        </button>
+      </div>
+
+      <!-- Result count -->
+      <div class="flex items-center justify-between mb-4">
+        <p class="text-sm text-slate-500">
+          <span x-text="filteredProducts.length"></span> products
+          <span x-show="filteredProducts.length !== products.length" class="text-slate-400">
+            (of <span x-text="products.length"></span>)
+          </span>
+        </p>
+        <select x-model="sortBy" @change="applyFilters()" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+          <option value="newest">Newest</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="name">Name (A-Z)</option>
+        </select>
+      </div>
+
+      <!-- Loading state -->
+      <div x-show="loading" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <template x-for="i in 8" :key="i">
+          <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 animate-pulse">
+            <div class="aspect-[3/4] bg-slate-200"></div>
+            <div class="p-3 space-y-2">
+              <div class="h-3 bg-slate-200 rounded w-3/4"></div>
+              <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Empty state -->
+      <div x-show="!loading && filteredProducts.length === 0" class="text-center py-16">
+        <div class="text-5xl mb-3">🔍</div>
+        <h3 class="text-lg font-semibold text-slate-700">No products found</h3>
+        <p class="text-sm text-slate-500 mt-1">Try changing filters or search query</p>
+        <button @click="clearAllFilters()" class="mt-4 px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700">Clear all filters</button>
+      </div>
+
+      <!-- Product grid -->
+      <div x-show="!loading && filteredProducts.length > 0" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <template x-for="product in filteredProducts" :key="product.id">
+          <article class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
+
+            <!-- Product image -->
+            <div class="relative aspect-[3/4] bg-slate-100 overflow-hidden cursor-pointer" @click="openProduct(product)">
+              <img
+                :src="productImage(product)"
+                :alt="product.name"
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                @error="onImageError($event, product)"
+              />
+              <!-- Sold out overlay -->
+              <div
+                x-show="product.availability === 'sold_out'"
+                class="absolute inset-0 bg-black/50 flex items-center justify-center"
+              >
+                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Sold Out</span>
+              </div>
+              <!-- Category badge -->
+              <span
+                x-show="product.category"
+                class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-0.5 rounded-full text-[10px] font-semibold text-slate-700"
+                x-text="product.category"
+              ></span>
+            </div>
+
+            <!-- Product info -->
+            <div class="p-3">
+              <h3
+                class="text-sm font-semibold text-slate-800 line-clamp-2 cursor-pointer hover:text-violet-600"
+                @click="openProduct(product)"
+                x-text="product.name"
+              ></h3>
+
+              <div class="flex items-center justify-between mt-1.5 mb-2">
+                <span class="text-base font-bold text-violet-700">Rs. <span x-text="formatPrice(product.sale_price)"></span></span>
+                <span
+                  x-show="product.retail_price && product.retail_price > product.sale_price"
+                  class="text-xs text-slate-400 line-through"
+                  x-text="'Rs. ' + formatPrice(product.retail_price)"
+                ></span>
+              </div>
+
+              <!-- Color + Fabric chips -->
+              <div class="flex flex-wrap gap-1 mb-2.5" x-show="product.color || product.fabric">
+                <span
+                  x-show="product.color"
+                  class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-slate-100 rounded text-[10px] text-slate-600"
+                >
+                  <span class="w-2 h-2 rounded-full border border-slate-300" :style="`background-color: ${colorToHex(product.color)}`"></span>
+                  <span x-text="product.color"></span>
+                </span>
+                <span
+                  x-show="product.fabric"
+                  class="px-1.5 py-0.5 bg-slate-100 rounded text-[10px] text-slate-600"
+                  x-text="product.fabric"
+                ></span>
+              </div>
+
+              <!-- WhatsApp Order Button (always visible, no detail page needed) -->
+              <a
+                :href="whatsappLink(product)"
+                target="_blank"
+                rel="noopener noreferrer"
+                @click="trackClick(product)"
+                class="flex items-center justify-center gap-1.5 w-full py-2.5 bg-[#25D366] hover:bg-[#1eb858] text-white rounded-lg text-xs font-bold transition-colors shadow-sm"
+                :class="{ 'opacity-50 pointer-events-none': product.availability === 'sold_out' }"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                <span>Order on WhatsApp</span>
+              </a>
+            </div>
+          </article>
+        </template>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== PRODUCT DETAIL MODAL ==================== -->
+  <div
+    x-show="selectedProduct"
+    @click.self="selectedProduct = null"
+    x-transition.opacity
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+    style="display: none;"
+  >
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" @click.stop>
+      <template x-if="selectedProduct">
+        <div class="grid md:grid-cols-2 gap-0">
+          <!-- Image -->
+          <div class="aspect-square md:aspect-auto bg-slate-100">
+            <img :src="productImage(selectedProduct)" :alt="selectedProduct.name" class="w-full h-full object-cover" @error="onImageError($event, selectedProduct)" />
+          </div>
+          <!-- Details -->
+          <div class="p-5 space-y-3">
+            <div class="flex items-start justify-between">
+              <div>
+                <h2 class="text-xl font-bold text-slate-900" x-text="selectedProduct.name"></h2>
+                <p x-show="selectedProduct.sku" class="text-xs text-slate-500 mt-0.5">SKU: <span x-text="selectedProduct.sku"></span></p>
+              </div>
+              <button @click="selectedProduct = null" class="p-1 text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+
+            <div class="flex items-baseline gap-2">
+              <span class="text-2xl font-bold text-violet-700">Rs. <span x-text="formatPrice(selectedProduct.sale_price)"></span></span>
+              <span
+                x-show="selectedProduct.retail_price && selectedProduct.retail_price > selectedProduct.sale_price"
+                class="text-sm text-slate-400 line-through"
+                x-text="'Rs. ' + formatPrice(selectedProduct.retail_price)"
+              ></span>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <span x-show="selectedProduct.category" class="px-2 py-1 bg-violet-100 text-violet-700 rounded text-xs font-medium" x-text="selectedProduct.category"></span>
+              <span x-show="selectedProduct.fabric" class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs" x-text="selectedProduct.fabric"></span>
+              <span x-show="selectedProduct.color" class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs" x-text="selectedProduct.color"></span>
+              <span x-show="selectedProduct.season" class="px-2 py-1 bg-amber-100 text-amber-700 rounded text-xs" x-text="selectedProduct.season"></span>
+            </div>
+
+            <div x-show="selectedProduct.description" class="text-sm text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+              <p x-text="selectedProduct.description"></p>
+            </div>
+
+            <!-- WhatsApp button in detail -->
+            <a
+              :href="whatsappLink(selectedProduct)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-center gap-2 w-full py-3 bg-[#25D366] hover:bg-[#1eb858] text-white rounded-xl font-bold transition-colors mt-4"
+              :class="{ 'opacity-50 pointer-events-none': selectedProduct.availability === 'sold_out' }"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              <span>Order on WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-slate-900 text-slate-400 mt-12">
+    <div class="max-w-7xl mx-auto px-4 py-8 text-center text-sm">
+      <p class="font-bold text-white text-base mb-1" x-text="catalog.brand || 'A Collection'"></p>
+      <p class="text-xs">Narowal • Shakargarh • Zafarwal</p>
+      <p class="text-[10px] mt-3 text-slate-500">Powered by Head Office System</p>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp button (always visible, scrolls into view) -->
+  <a
+    :href="generalWhatsappLink()"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="fixed bottom-5 right-5 z-30 w-14 h-14 bg-[#25D366] hover:bg-[#1eb858] rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
+    aria-label="Chat on WhatsApp"
+  >
+    <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+{
+  "brand": "A Collection Narowal",
+  "whatsapp_number": "923420830995",
+  "version": "2026-07-01T14:00:00Z",
+  "published_at": "2026-07-01T14:00:00Z",
+  "products": [
+    {
+      "id": 1,
+      "name": "Nishat 3-Piece Lawn Suit — Maroon Floral",
+      "sku": "AC-2026-001",
+      "sale_price": 3300,
+      "retail_price": 4000,
+      "category": "3 Piece",
+      "color": "Maroon",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Premium Nishat lawn 3-piece suit with maroon floral print. Includes shirt, dupatta, and trouser. Perfect for summer wear.",
+      "images": [],
+      "availability": "available"
+    },
+    {
+      "id": 2,
+      "name": "Gul Ahmed 2-Piece Cotton Suit — Royal Blue",
+      "sku": "AC-2026-002",
+      "sale_price": 2800,
+      "retail_price": 3500,
+      "category": "2 Piece",
+      "color": "Royal Blue",
+      "fabric": "Cotton",
+      "season": "Summer",
+      "description": "Comfortable 2-piece cotton suit in royal blue. Shirt + trouser. Ideal for daily wear.",
+      "images": [],
+      "availability": "available"
+    },
+    {
+      "id": 3,
+      "name": "Embroidered Cut Piece — Bottle Green",
+      "sku": "AC-2026-003",
+      "sale_price": 1500,
+      "retail_price": null,
+      "category": "Cut Piece",
+      "color": "Bottle Green",
+      "fabric": "Cotton",
+      "season": "Winter",
+      "description": "Beautifully embroidered cut piece fabric in bottle green color.",
+      "images": [],
+      "availability": "sold_out"
+    },
+    {
+      "id": 4,
+      "name": "Gents Wash & Wear Shirt — White",
+      "sku": "AC-2026-004",
+      "sale_price": 1800,
+      "retail_price": 2200,
+      "category": "Gents",
+      "color": "White",
+      "fabric": "Wash and Wear",
+      "season": "Summer",
+      "description": "Classic gents wash & wear shirt in crisp white. Easy-care fabric, perfect for daily office wear.",
+      "images": [],
+      "availability": "available"
+    },
+    {
+      "id": 5,
+      "name": "Maria B 3-Piece Chiffon — Black Embroidered",
+      "sku": "AC-2026-005",
+      "sale_price": 6500,
+      "retail_price": 8000,
+      "category": "3 Piece",
+      "color": "Black",
+      "fabric": "Chiffon",
+      "season": "Festive",
+      "description": "Elegant Maria B 3-piece chiffon suit with intricate black embroidery. Perfect for weddings and festive occasions.",
+      "images": [],
+      "availability": "available"
+    },
+    {
+      "id": 6,
+      "name": "Sana Safinaz 3-Piece Lawn — Pink Printed",
+      "sku": "AC-2026-006",
+      "sale_price": 5500,
+      "retail_price": 6500,
+      "category": "3 Piece",
+      "color": "Pink",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Sana Safinaz printed lawn 3-piece. Premium quality, latest design.",
+      "images": [],
+      "availability": "available"
+    }
+  ]
+}
