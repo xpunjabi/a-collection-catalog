@@ -1,91 +1,256 @@
 {
   "brand": "A Collection Narowal",
   "whatsapp_number": "923420830995",
-  "version": "2026-07-01T14:00:00Z",
-  "published_at": "2026-07-01T14:00:00Z",
+  "version": "2026-07-02T10:20:11.855041+00:00",
+  "published_at": "2026-07-02T10:20:11.855041+00:00",
   "products": [
     {
-      "id": 1,
-      "name": "Nishat 3-Piece Lawn Suit — Maroon Floral",
-      "sku": "AC-2026-001",
-      "sale_price": 3300,
-      "retail_price": 4000,
+      "id": 41,
+      "name": "Premium Lawn 2-Piece Suit - Yellow and Dark Green Floral",
+      "sku": "D#26",
+      "sale_price": 1300.0,
+      "retail_price": 1500.0,
+      "category": "2 Piece",
+      "color": "Yellow and Dark Green Floral",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Premium quality. Shirt: 2.75 Mtr, Trouser: 2.25 Mtr.",
+      "images": [
+        "1782987117614720200_thumbnail.jpg",
+        "1782987214782464800_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 40,
+      "name": "Lawn 2-Piece Suit - Terracotta Floral with Pink Trouser",
+      "sku": "D#24",
+      "sale_price": 1300.0,
+      "retail_price": 1500.0,
+      "category": "2 Piece",
+      "color": "Terracotta Floral",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Shirt: 2.75 Mtr, Trouser: 2.25 Mtr. Trouser in solid light pink.",
+      "images": [
+        "1782986797334806000_thumbnail.jpg",
+        "1782986915674922500_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 39,
+      "name": "Premium 90/70 Lawn 2-Piece Suit - Green Floral & Yellow",
+      "sku": "D#23",
+      "sale_price": 1300.0,
+      "retail_price": 1500.0,
+      "category": "2 Piece",
+      "color": "Green Floral & Yellow",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Shirt 2.75 Mtr, Trouser 2.25 Mtr",
+      "images": [
+        "1782986173285789400_thumbnail.jpg",
+        "1782986253581506400_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 38,
+      "name": "Premium 2-Piece Lawn Suit - Green Floral & Yellow",
+      "sku": "D#21",
+      "sale_price": 1300.0,
+      "retail_price": 1500.0,
+      "category": "2 Piece",
+      "color": "Green Floral & Yellow",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Shirt: 2.75 Mtr, Trouser: 2.25 Mtr. Premium quality fabric.",
+      "images": [
+        "1782985853464585900_thumbnail.jpg",
+        "1782985919099034000_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 37,
+      "name": "Premium Quality 90/70 Lawn 2-Piece Suit - Bottle Green Floral",
+      "sku": "D#20",
+      "sale_price": 1300.0,
+      "retail_price": 1500.0,
+      "category": "2 Piece",
+      "color": "Bottle Green",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Shirt 2.75 Mtr, Trouser 2.25 Mtr",
+      "images": [
+        "1782985519057911500_thumbnail.jpg",
+        "1782985584560312300_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 36,
+      "name": "Faris by Binnoor Fab 3-Piece Printed Lawn Suit - Royal Purple",
+      "sku": "DE-LA65-P30634",
+      "sale_price": 3100.0,
+      "retail_price": 4399.0,
+      "category": "3 Piece",
+      "color": "Royal Purple",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Prints Vol-65 Collection. Includes Luxury Quality Lawn Shirt (2.75 MTR), Premium Nino Kari Dupatta (2.25 MTR), and Exclusive Cotton Dyed Trouser (2.25 MTR).",
+      "images": [
+        "1782983863573757400_thumbnail.jpg",
+        "1782983900246964700_thumbnail.jpg",
+        "1782983928298431400_thumbnail.jpg",
+        "1782983954295086300_thumbnail.jpg",
+        "1782983962913243900_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 35,
+      "name": "Faris by Binnoor Fab 3-Piece Lawn Suit - Maroon Floral",
+      "sku": "DE-LA65-P30633",
+      "sale_price": 3100.0,
+      "retail_price": 4399.0,
       "category": "3 Piece",
       "color": "Maroon",
       "fabric": "Lawn",
       "season": "Summer",
-      "description": "Premium Nishat lawn 3-piece suit with maroon floral print. Includes shirt, dupatta, and trouser. Perfect for summer wear.",
-      "images": [],
+      "description": "Luxury quality printed lawn shirt (2.75 MTR) with premium Nino Kari dupatta (2.25 MTR) and exclusive cotton dyed trouser (2.25 MTR). Features floral and geometric prints.",
+      "images": [
+        "1782982780534349900_thumbnail.jpg",
+        "1782982843575486000_thumbnail.jpg",
+        "1782982874437036000_thumbnail.jpg",
+        "1782982906477914000_thumbnail.jpg",
+        "1782982919397549700_thumbnail.jpg"
+      ],
       "availability": "available"
     },
     {
-      "id": 2,
-      "name": "Gul Ahmed 2-Piece Cotton Suit — Royal Blue",
-      "sku": "AC-2026-002",
-      "sale_price": 2800,
-      "retail_price": 3500,
-      "category": "2 Piece",
-      "color": "Royal Blue",
-      "fabric": "Cotton",
-      "season": "Summer",
-      "description": "Comfortable 2-piece cotton suit in royal blue. Shirt + trouser. Ideal for daily wear.",
-      "images": [],
-      "availability": "available"
-    },
-    {
-      "id": 3,
-      "name": "Embroidered Cut Piece — Bottle Green",
-      "sku": "AC-2026-003",
-      "sale_price": 1500,
-      "retail_price": null,
-      "category": "Cut Piece",
-      "color": "Bottle Green",
-      "fabric": "Cotton",
-      "season": "Winter",
-      "description": "Beautifully embroidered cut piece fabric in bottle green color.",
-      "images": [],
-      "availability": "sold_out"
-    },
-    {
-      "id": 4,
-      "name": "Gents Wash & Wear Shirt — White",
-      "sku": "AC-2026-004",
-      "sale_price": 1800,
-      "retail_price": 2200,
-      "category": "Gents",
-      "color": "White",
-      "fabric": "Wash and Wear",
-      "season": "Summer",
-      "description": "Classic gents wash & wear shirt in crisp white. Easy-care fabric, perfect for daily office wear.",
-      "images": [],
-      "availability": "available"
-    },
-    {
-      "id": 5,
-      "name": "Maria B 3-Piece Chiffon — Black Embroidered",
-      "sku": "AC-2026-005",
-      "sale_price": 6500,
-      "retail_price": 8000,
+      "id": 34,
+      "name": "Abdul Hanan 3-Piece Digital Lawn Suit - Multi-Color Polka Dot",
+      "sku": "D#22",
+      "sale_price": 2600.0,
+      "retail_price": 3000.0,
       "category": "3 Piece",
-      "color": "Black",
-      "fabric": "Chiffon",
-      "season": "Festive",
-      "description": "Elegant Maria B 3-piece chiffon suit with intricate black embroidery. Perfect for weddings and festive occasions.",
-      "images": [],
-      "availability": "available"
-    },
-    {
-      "id": 6,
-      "name": "Sana Safinaz 3-Piece Lawn — Pink Printed",
-      "sku": "AC-2026-006",
-      "sale_price": 5500,
-      "retail_price": 6500,
-      "category": "3 Piece",
-      "color": "Pink",
+      "color": "Multi-color Polka Dot",
       "fabric": "Lawn",
       "season": "Summer",
-      "description": "Sana Safinaz printed lawn 3-piece. Premium quality, latest design.",
-      "images": [],
+      "description": "All-over digital print lawn shirt with colorful polka dots, accompanied by a digital printed dupatta and plain dyed trousers.",
+      "images": [
+        "1782980525342660900_thumbnail.jpg",
+        "1782980621432930100_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 33,
+      "name": "AH Collection 3-Piece Lawn Suit - Black Multi-color Floral",
+      "sku": "DS#25",
+      "sale_price": 2600.0,
+      "retail_price": 3000.0,
+      "category": "3 Piece",
+      "color": "Black Multi-color",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "90/88 all-over digital print lawn from 2026 collection.",
+      "images": [
+        "1782979998371469500_thumbnail.jpg",
+        "1782980059164622600_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 32,
+      "name": "Abdul Hanan 3-Piece Digital Lawn Suit - Lavender Multi-Print",
+      "sku": "DS#10",
+      "sale_price": 2600.0,
+      "retail_price": 3000.0,
+      "category": "3 Piece",
+      "color": "Lavender Multi-Print",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "All-Over Print Shirt, Digital Same Dupatta, Print Trouser",
+      "images": [
+        "1782979565958348100_thumbnail.jpg",
+        "1782979649889848600_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 31,
+      "name": "AH Abdul Hanan Collection 2026 Digital Lawn 90/88 AllOver Print 3 Piece Suit",
+      "sku": "AH-2026-V29-DS10",
+      "sale_price": 2600.0,
+      "retail_price": 3000.0,
+      "category": "3 Piece Suits",
+      "color": "Purple/Lavender (Multi-floral print)",
+      "fabric": null,
+      "season": "Summer 2026",
+      "description": "AH Abdul Hanan Collection 2026 ka yeh Digital Lawn 90/88 ka 3 piece suit aapke garmiyon ko haseen banayega! Vibrant all-over floral print ke saath, isme digital same dupatta aur print trouser shamil hain. Fresh aur stylish look ke liye perfect.",
+      "images": [
+        "1782979469724478500_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 30,
+      "name": "AH Abdul Hanan 3-Piece Digital Lawn Suit - Black Floral",
+      "sku": "VOLUME#48 DS#14",
+      "sale_price": 2600.0,
+      "retail_price": 3000.0,
+      "category": "3 Piece",
+      "color": "Black with Yellow Floral",
+      "fabric": "Digital Lawn 90/88",
+      "season": "Summer",
+      "description": "AllOver Print with Digital Same Dupatta and Dyed Trouser. Collection 2026.",
+      "images": [
+        "1782978306846181400_thumbnail.jpg",
+        "1782978383207533200_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 29,
+      "name": "Nishat 3-Piece Unstitched Lawn Suit - Blue & Yellow Floral",
+      "sku": "42302117-R",
+      "sale_price": 3400.0,
+      "retail_price": 5490.0,
+      "category": "3 Piece",
+      "color": "Blue and Yellow",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Unstitched 3-piece suit including 3 meters printed lawn shirt, 2.5 meters printed dupatta, and 2.5 meters dyed trouser.",
+      "images": [
+        "1782974900335619200_thumbnail.jpg",
+        "1782974921390552400_thumbnail.jpg",
+        "1782974972526717900_thumbnail.jpg",
+        "1782974991079530000_thumbnail.jpg",
+        "1782975015122408200_thumbnail.jpg",
+        "1782975352919375200_thumbnail.jpg"
+      ],
+      "availability": "available"
+    },
+    {
+      "id": 28,
+      "name": "Nishat 3-Piece Unstitched Lawn Suit - Royal Blue Geometric",
+      "sku": "42001233-R",
+      "sale_price": 3400.0,
+      "retail_price": 5490.0,
+      "category": "3 Piece",
+      "color": "Royal Blue",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "Unstitched 3-piece suit. Includes 3 meters printed lawn for the shirt, 2.5 meters printed dupatta, and 2.5 meters dyed trouser fabric.",
+      "images": [
+        "1782973841984623300_thumbnail.jpg",
+        "1782973859502916300_thumbnail.jpg",
+        "1782973889327635800_thumbnail.jpg",
+        "1782974213150340900_thumbnail.jpg"
+      ],
       "availability": "available"
     }
   ]
