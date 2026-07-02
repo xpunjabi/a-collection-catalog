@@ -76,6 +76,10 @@ button, label, .no-select {
   .fixed.bottom-5 {
     bottom: calc(1.25rem + env(safe-area-inset-bottom));
   }
+  /* v0.17.0: Sticky WhatsApp bar in modal — respect safe area */
+  .safe-bottom {
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
 }
 
 /* Focus visible for keyboard navigation (accessibility) */

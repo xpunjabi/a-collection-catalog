@@ -195,10 +195,17 @@ function catalogApp() {
         .substring(0, 80);
     },
 
-    // v0.16.0: Build permanent product URL
+    // v0.17.0: Build permanent product URL using static product page.
+    // During publish, HO generates products/<slug>.html for each product
+    // with proper OG meta tags (for FB/WhatsApp link previews) + a redirect
+    // script that opens the SPA with this product in the modal.
+    // This URL works for: sharing, OG crawlers, direct access, copy link.
     productUrl(product) {
       const slug = product.sku || this.slugify(product.name);
-      return `${window.location.origin}${window.location.pathname}#/${slug}`;
+      const base = window.location.origin + window.location.pathname;
+      // Remove trailing index.html if present
+      const cleanBase = base.replace(/index\.html$/, '');
+      return `${cleanBase}products/${slug}.html`;
     },
 
     // v0.16.0: Copy product link to clipboard
@@ -470,18 +477,23 @@ function catalogApp() {
       return Number(n).toLocaleString('en-PK');
     },
 
+    // v0.17.0: Enhanced WhatsApp message with product URL for instant
+    // identification. Seller sees Product ID + Name + Link — no need to
+    // ask "which product?".
     whatsappLink(product) {
       const phone = (this.catalog.whatsapp_number || '').replace(/[^\d]/g, '');
+      const productUrl = this.productUrl(product);
       const lines = [
-        `Assalamualaikum! I'm interested in this product:`,
+        `Hello, I would like information about this product.`,
         ``,
-        `📦 ${product.name}`,
+        `Product ID: ${product.sku || product.id}`,
+        `Product Name: ${product.name}`,
+        `Product Link: ${productUrl}`,
       ];
-      if (product.sku) lines.push(`🔖 SKU: ${product.sku}`);
-      lines.push(`💰 Price: Rs. ${this.formatPrice(product.sale_price)}`);
-      if (product.color) lines.push(`🎨 Color: ${product.color}`);
-      if (product.fabric) lines.push(`🧵 Fabric: ${product.fabric}`);
-      lines.push(``, `Is this available? Please share more details.`);
+      if (product.sale_price > 0) {
+        lines.push(`Price: Rs. ${this.formatPrice(product.sale_price)}`);
+      }
+      lines.push(``, `Is this available?`);
 
       const text = encodeURIComponent(lines.join('\n'));
       return `https://wa.me/${phone}?text=${text}`;
