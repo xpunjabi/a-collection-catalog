@@ -15,10 +15,18 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="A Collection" />
 
-  <!-- Social -->
-  <meta property="og:title" content="A Collection Narowal" />
-  <meta property="og:description" content="Latest lawn, cotton, and embroidered suits. Order on WhatsApp." />
+  <!-- Social — v0.16.3: Added og:image for link previews on FB/WhatsApp -->
+  <meta property="og:title" content="A Collection Narowal — Online Catalog" />
+  <meta property="og:description" content="Latest lawn, cotton, and embroidered suits. Order on WhatsApp. Narowal • Shakargarh • Zafarwal." />
   <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://xpunjabi.github.io/a-collection-catalog/icon-512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:url" content="https://xpunjabi.github.io/a-collection-catalog/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="A Collection Narowal — Online Catalog" />
+  <meta name="twitter:description" content="Latest lawn, cotton, and embroidered suits. Order on WhatsApp." />
+  <meta name="twitter:image" content="https://xpunjabi.github.io/a-collection-catalog/icon-512.png" />
 
   <title>A Collection Narowal — Online Catalog</title>
 
@@ -169,7 +177,7 @@
       <div x-show="loading" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         <template x-for="i in 8" :key="i">
           <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 animate-pulse">
-            <div class="aspect-[3/4] bg-slate-200"></div>
+            <div class="aspect-square bg-slate-200"></div>
             <div class="p-3 space-y-2">
               <div class="h-3 bg-slate-200 rounded w-3/4"></div>
               <div class="h-3 bg-slate-200 rounded w-1/2"></div>
@@ -192,12 +200,12 @@
           <article class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
 
             <!-- Product image -->
-            <div class="relative aspect-[3/4] bg-slate-100 overflow-hidden cursor-pointer" @click="openProduct(product)">
+            <div class="relative aspect-square bg-slate-100 overflow-hidden cursor-pointer" @click="openProduct(product)">
               <img
                 :src="productImage(product)"
                 :alt="product.name"
                 loading="lazy"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 @error="onImageError($event, product)"
               />
               <!-- Sold out overlay -->
