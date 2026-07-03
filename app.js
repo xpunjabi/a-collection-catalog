@@ -195,13 +195,30 @@ function catalogApp() {
         .substring(0, 80);
     },
 
+    // v0.17.2: Sanitize SKU for URL/filename.
+    // MUST match HO's sanitize_slug() exactly (case-sensitive!).
+    // HO code (src-tauri/src/catalog_publish.rs):
+    //   sku.chars().map(|c| if c.is_alphanumeric() || c == '-' { c } else { '-' }).collect()
+    //   .trim_matches('-')
+    // Examples: "D#26" → "D-26", "VOLUME#48 DS#14" → "VOLUME-48-DS-14"
+    // NOTE: Case is PRESERVED (D → D, not d). GitHub Pages is case-sensitive.
+    // DO NOT use slugify() for SKUs — slugify lowercases, which breaks matching.
+    sanitizeSku(sku) {
+      if (!sku) return '';
+      return sku
+        .replace(/[^a-zA-Z0-9-]/g, '-')   // non-alphanumeric/non-hyphen → hyphen
+        .replace(/^-+|-+$/g, '');          // trim leading/trailing hyphens
+    },
+
     // v0.17.0: Build permanent product URL using static product page.
     // During publish, HO generates products/<slug>.html for each product
     // with proper OG meta tags (for FB/WhatsApp link previews) + a redirect
     // script that opens the SPA with this product in the modal.
     // This URL works for: sharing, OG crawlers, direct access, copy link.
+    // v0.17.2: SKU sanitized via sanitizeSku() to match HO's on-disk filename
+    // (D#26 → D-26). Fallback to slugified name if no SKU.
     productUrl(product) {
-      const slug = product.sku || this.slugify(product.name);
+      const slug = this.sanitizeSku(product.sku) || this.slugify(product.name);
       const base = window.location.origin + window.location.pathname;
       // Remove trailing index.html if present
       const cleanBase = base.replace(/index\.html$/, '');

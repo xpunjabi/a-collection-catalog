@@ -22,9 +22,10 @@
  * If user ignores the toast, they'll get the new version on next visit.
  */
 
+// v0.17.2: SKU sanitization fix (D#26 → D-26) for product URLs.
 // v0.17.1: Bump this version on every catalog code update (HTML/JS/CSS changes)
 // Format: YYYYMMDD-HHMM (deploy timestamp)
-const SW_VERSION = '20260703-0815-v5';
+const SW_VERSION = '20260703-0930-v6';
 const APP_SHELL_CACHE = `acollection-shell-${SW_VERSION}`;
 const DATA_CACHE = `acollection-data-v2`;
 
