@@ -195,18 +195,20 @@ function catalogApp() {
         .substring(0, 80);
     },
 
-    // v0.17.2: Sanitize SKU for URL/filename.
-    // MUST match HO's sanitize_slug() exactly (case-sensitive!).
-    // HO code (src-tauri/src/catalog_publish.rs):
-    //   sku.chars().map(|c| if c.is_alphanumeric() || c == '-' { c } else { '-' }).collect()
-    //   .trim_matches('-')
-    // Examples: "D#26" → "D-26", "VOLUME#48 DS#14" → "VOLUME-48-DS-14"
+    // v0.17.3: Sanitize SKU for URL/filename (matches HO Rust sanitize_slug()).
+    // MUST match HO exactly (case-sensitive). See HO catalog_publish.rs:
+    //   sku.chars().map(|c| if c.is_alphanumeric() || c == '-' { c } else { '-' })
+    //   -> collapse_hyphens() -> trim_matches('-')
+    // Examples: "D#26" → "D-26", "VOLUME#48 DS#14" → "VOLUME-48-DS-14",
+    //           "MULTI###HASH" → "MULTI-HASH", "AB##CD" → "AB-CD"
     // NOTE: Case is PRESERVED (D → D, not d). GitHub Pages is case-sensitive.
     // DO NOT use slugify() for SKUs — slugify lowercases, which breaks matching.
+    // v0.17.3 changelog: added collapse step (was missing in v0.17.2).
     sanitizeSku(sku) {
       if (!sku) return '';
       return sku
         .replace(/[^a-zA-Z0-9-]/g, '-')   // non-alphanumeric/non-hyphen → hyphen
+        .replace(/-+/g, '-')              // v0.17.3: collapse consecutive hyphens
         .replace(/^-+|-+$/g, '');          // trim leading/trailing hyphens
     },
 
