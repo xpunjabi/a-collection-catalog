@@ -30,12 +30,13 @@
 
   <title>A Collection Narowal — Online Catalog</title>
 
-  <!-- Tailwind CSS via CDN (no build pipeline) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Alpine.js (3KB) for reactivity -->
-  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <!-- Fuse.js for fuzzy search -->
-  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+  <!-- v0.17.1: Vendored locally — Pakistan CDN reliability + true offline PWA -->
+  <!-- Tailwind CSS (Play CDN, ~400KB minified, JIT) — cached by SW -->
+  <script src="vendor/tailwind.js"></script>
+  <!-- Alpine.js v3.15.12 (~46KB) for reactivity — cached by SW -->
+  <script defer src="vendor/alpine.min.js"></script>
+  <!-- Fuse.js v7.0.0 (~24KB) for fuzzy search — cached by SW -->
+  <script src="vendor/fuse.min.js"></script>
 
   <link rel="stylesheet" href="styles.css" />
 </head>

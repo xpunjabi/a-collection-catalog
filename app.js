@@ -578,12 +578,14 @@ if ('serviceWorker' in navigator) {
           showUpdateToast();
         });
 
-        // Also poll for SW updates every 60 seconds (in case the page stays
-        // open for a long time). The browser does this automatically on
-        // navigation, but we add a manual check for SPA-style apps.
+        // v0.17.1: Poll for SW updates every 5 minutes (was 60s) + only when
+        // tab is visible. Pakistan 3G/4G battery drain was too high at 60s.
+        // Page Visibility API: skip update check when tab is in background.
         setInterval(() => {
-          reg.update().catch(() => {});
-        }, 60000);
+          if (document.visibilityState === 'visible') {
+            reg.update().catch(() => {});
+          }
+        }, 300000);
       },
       (err) => console.warn('[catalog] Service Worker registration failed:', err)
     );

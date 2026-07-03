@@ -1,14 +1,15 @@
 /**
  * A Collection Catalog — Service Worker v2
  *
+ * v0.17.1: Vendored Tailwind/Alpine/Fuse.js locally — true offline PWA.
  * v0.16.3: Fixed cache strategy so customers never need to hard-refresh.
  *
  * Strategy:
- * - App shell (HTML/CSS/JS/manifest): stale-while-revalidate
+ * - App shell (HTML/CSS/JS/manifest + vendor/): stale-while-revalidate
  *   → serves cached version instantly, fetches fresh in background,
  *     if fresh differs, triggers update notification
  * - catalog.json + images: stale-while-revalidate (fast load + auto-update)
- * - Cross-origin CDN (Tailwind/Alpine/Fuse.js): network-only (don't cache)
+ * - Cross-origin requests: still skipped (no CDN deps anymore — all vendored)
  *
  * Update flow:
  * 1. SW_VERSION bumped on every deploy (set by build process)
@@ -21,13 +22,16 @@
  * If user ignores the toast, they'll get the new version on next visit.
  */
 
-// v0.16.3: Bump this version on every catalog code update (HTML/JS/CSS changes)
+// v0.17.1: Bump this version on every catalog code update (HTML/JS/CSS changes)
 // Format: YYYYMMDD-HHMM (deploy timestamp)
-const SW_VERSION = '20260702-1400-v4';
+const SW_VERSION = '20260703-0815-v5';
 const APP_SHELL_CACHE = `acollection-shell-${SW_VERSION}`;
 const DATA_CACHE = `acollection-data-v2`;
 
 // Files that make up the app shell (cached for offline use)
+// v0.17.1: Added vendored CDN deps (Tailwind/Alpine/Fuse.js) for true offline PWA.
+//   Total app shell size: ~480KB (was ~50KB). First load on 3G: ~10-15s,
+//   then SW caches everything → instant loads + full offline support.
 const APP_SHELL_FILES = [
   './',
   './index.html',
@@ -37,6 +41,10 @@ const APP_SHELL_FILES = [
   './logo-header.png',
   './icon-192.png',
   './icon-512.png',
+  // v0.17.1: Vendored CDN dependencies (previously loaded cross-origin)
+  './vendor/tailwind.js',    // ~400KB — Tailwind Play CDN (JIT)
+  './vendor/alpine.min.js',  // ~46KB  — Alpine.js v3.15.12
+  './vendor/fuse.min.js',    // ~24KB  — Fuse.js v7.0.0
 ];
 
 // Install: pre-cache app shell
@@ -83,8 +91,9 @@ self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (request.method !== 'GET') return;
 
-  // Skip cross-origin requests (Tailwind CDN, Alpine.js, Fuse.js, fonts)
-  // — let them go to network, don't cache (CDN handles its own caching)
+  // Skip cross-origin requests (e.g., OG images hotlinked from other domains).
+  // v0.17.1: Tailwind/Alpine/Fuse.js are now vendored locally — no longer
+  // cross-origin. They're served from ./vendor/ and cached as app shell.
   if (url.origin !== self.location.origin) return;
 
   // catalog.json — stale-while-revalidate (must update on every publish)
