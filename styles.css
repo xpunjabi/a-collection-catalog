@@ -136,6 +136,8 @@ aside::-webkit-scrollbar-thumb {
 
 /* ============================================================
  * v0.19.0: PRODUCT CARD — premium shadows + brand colors
+ * v0.20.0: Flex column + height 100% so all cards in a row
+ *          have equal height (CTA pushed to bottom via margin-top: auto).
  * ============================================================ */
 .product-card {
   background-color: var(--brand-surface);
@@ -144,12 +146,27 @@ aside::-webkit-scrollbar-thumb {
   border: 1px solid rgba(139, 21, 56, 0.08);
   box-shadow: 0 2px 8px rgba(139, 21, 56, 0.06);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 @media (hover: hover) {
   .product-card:hover {
     box-shadow: 0 8px 24px rgba(139, 21, 56, 0.15);
     transform: translateY(-3px);
   }
+}
+
+/* v0.20.0: Card body is flex column, WhatsApp CTA pushed to bottom */
+.product-card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+/* Push WhatsApp CTA to bottom of card so all cards in a row align */
+.product-card-body .wa-cta {
+  margin-top: auto;
 }
 
 .product-card-image {
@@ -168,20 +185,34 @@ aside::-webkit-scrollbar-thumb {
   transform: scale(1.06);
 }
 
-/* Discount badge — top-left of product image */
+/* Discount badge — top-left of product image
+ * v0.20.0: Smaller + mobile-first (was 0.7rem — too big, conflicted with
+ *          "2 piece" category chip on small screens).
+ */
 .discount-badge {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 6px;
+  left: 6px;
   background-color: var(--brand-danger);
   color: #FFFFFF;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 6px;
+  padding: 2px 6px;
+  border-radius: 5px;
   box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
   z-index: 2;
   letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+/* v0.20.0: Even more compact on small phones (<=480px) */
+@media (max-width: 480px) {
+  .discount-badge {
+    font-size: 0.55rem;
+    padding: 2px 5px;
+    top: 5px;
+    left: 5px;
+  }
 }
 
 /* Sold out overlay (kept from v0.16) */
@@ -205,25 +236,38 @@ aside::-webkit-scrollbar-thumb {
   letter-spacing: 0.5px;
 }
 
-/* Category badge (subtle, top-right) */
+/* Category badge (subtle, top-right)
+ * v0.20.0: Slightly smaller to balance with new compact SAVE badge.
+ */
 .category-chip {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 6px;
+  right: 6px;
   background-color: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(4px);
   color: var(--brand-primary);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  padding: 3px 8px;
+  padding: 2px 6px;
   border-radius: 999px;
   z-index: 2;
+  max-width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Card body */
-.product-card-body {
-  padding: 12px;
+/* v0.20.0: Match compact size on small phones */
+@media (max-width: 480px) {
+  .category-chip {
+    font-size: 0.55rem;
+    padding: 2px 5px;
+    top: 5px;
+    right: 5px;
+  }
 }
+
+/* Card title — see .product-card-body above for flex column layout */
 .product-card-title {
   font-size: 0.92rem;
   font-weight: 600;
