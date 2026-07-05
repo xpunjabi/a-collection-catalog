@@ -502,17 +502,19 @@ function catalogApp() {
     whatsappLink(product) {
       const phone = (this.catalog.whatsapp_number || '').replace(/[^\d]/g, '');
       const productUrl = this.productUrl(product);
+      // v0.19.0: Hinglish message — matches HO static page template.
+      // Friendly, clear, mobile-friendly (Narowal customers prefer Roman Urdu).
       const lines = [
-        `Hello, I would like information about this product.`,
+        `Assalam o alaikum! Main is product me interested hoon:`,
         ``,
-        `Product ID: ${product.sku || product.id}`,
-        `Product Name: ${product.name}`,
-        `Product Link: ${productUrl}`,
+        `*${product.name}*`,
+        `SKU: ${product.sku || product.id}`,
       ];
       if (product.sale_price > 0) {
         lines.push(`Price: Rs. ${this.formatPrice(product.sale_price)}`);
       }
-      lines.push(``, `Is this available?`);
+      lines.push(`Link: ${productUrl}`);
+      lines.push(``, `Kya ye available hai?`);
 
       const text = encodeURIComponent(lines.join('\n'));
       return `https://wa.me/${phone}?text=${text}`;

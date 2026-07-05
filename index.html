@@ -40,26 +40,27 @@
 
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen" x-data="catalogApp()" x-init="init()" x-cloak>
+<body class="min-h-screen" x-data="catalogApp()" x-init="init()" x-cloak>
 
   <!-- ==================== HEADER ==================== -->
-  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+  <!-- v0.19.0: Maroon gradient + gold accent — premium brand identity -->
+  <header class="sticky top-0 z-30 brand-header">
     <div class="max-w-7xl mx-auto px-4 py-3">
       <!-- Brand row -->
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
-          <img src="logo-header.png" alt="A Collection" class="w-10 h-10 rounded-lg object-cover" />
+          <img src="logo-header.png" alt="A Collection" class="w-10 h-10 rounded-lg object-cover ring-2 ring-[#C9A961]/50" />
           <div>
-            <h1 class="text-lg font-bold leading-tight" x-text="catalog.brand || 'A Collection'"></h1>
-            <p class="text-[10px] text-slate-500 leading-tight">Narowal • Online Catalog</p>
+            <h1 class="brand-name" x-text="catalog.brand || 'A Collection'"></h1>
+            <p class="brand-tagline">NAROWAL</p>
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <!-- v0.16.2: Custom Install App button (captures beforeinstallprompt) -->
+          <!-- v0.16.2: Custom Install App button — v0.19.0: gold accent on maroon -->
           <button
             x-show="canInstall"
             @click="installApp()"
-            class="flex items-center gap-1 px-3 py-1.5 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-xs font-medium transition-colors"
+            class="brand-btn-install flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             <span class="hidden sm:inline">Install App</span>
@@ -67,7 +68,7 @@
           </button>
           <button
             @click="showFilters = !showFilters"
-            class="lg:hidden p-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition"
+            class="brand-btn-filter lg:hidden p-2 rounded-lg transition"
             aria-label="Filters"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M6 12h12M10 20h4"/></svg>
@@ -75,20 +76,20 @@
         </div>
       </div>
 
-      <!-- Search bar -->
+      <!-- Search bar — v0.19.0: light surface on maroon header -->
       <div class="relative">
         <input
           type="search"
           x-model="searchQuery"
           @input="applyFilters()"
           placeholder="Search by name, color, fabric..."
-          class="w-full bg-slate-100 border border-slate-200 rounded-full pl-11 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white"
+          class="brand-search w-full rounded-full pl-11 pr-10 py-2.5 text-sm"
         />
-        <svg class="w-5 h-5 absolute left-3.5 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+        <svg class="w-5 h-5 absolute left-3.5 top-3 text-[#8B1538]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
         <button
           x-show="searchQuery"
           @click="searchQuery = ''; applyFilters()"
-          class="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
+          class="absolute right-3 top-3 text-[#8B1538] hover:text-[#6B1028]"
           aria-label="Clear search"
         >✕</button>
       </div>
@@ -198,80 +199,80 @@
       <!-- Product grid -->
       <div x-show="!loading && filteredProducts.length > 0" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         <template x-for="product in filteredProducts" :key="product.id">
-          <article class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
+          <article class="product-card">
 
-            <!-- Product image -->
-            <div class="relative aspect-square bg-slate-100 overflow-hidden cursor-pointer" @click="openProduct(product)">
+            <!-- Product image — v0.19.0: premium card with discount badge -->
+            <div class="product-card-image cursor-pointer" @click="openProduct(product)">
+              <!-- v0.19.0: Discount badge (top-left, red) -->
+              <span
+                x-show="product.retail_price && product.retail_price > product.sale_price"
+                class="discount-badge"
+                x-text="'SAVE Rs. ' + formatPrice(product.retail_price - product.sale_price)"
+              ></span>
+              <!-- Category chip (top-right) -->
+              <span
+                x-show="product.category"
+                class="category-chip"
+                x-text="product.category"
+              ></span>
               <img
                 :src="productImage(product)"
                 :alt="product.name"
                 loading="lazy"
-                class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 @error="onImageError($event, product)"
               />
               <!-- Sold out overlay -->
               <div
                 x-show="product.availability === 'sold_out'"
-                class="absolute inset-0 bg-black/50 flex items-center justify-center"
+                class="sold-out-overlay"
               >
-                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Sold Out</span>
+                <span>Sold Out</span>
               </div>
-              <!-- Category badge -->
-              <span
-                x-show="product.category"
-                class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-0.5 rounded-full text-[10px] font-semibold text-slate-700"
-                x-text="product.category"
-              ></span>
             </div>
 
-            <!-- Product info -->
-            <div class="p-3">
+            <!-- Product info — v0.19.0: maroon prices, premium subtitle -->
+            <div class="product-card-body">
               <h3
-                class="text-sm font-semibold text-slate-800 line-clamp-2 cursor-pointer hover:text-violet-600"
+                class="product-card-title"
                 @click="openProduct(product)"
                 x-text="product.name"
               ></h3>
 
-              <div class="flex items-center justify-between mt-1.5 mb-2">
-                <span class="text-base font-bold text-violet-700">Rs. <span x-text="formatPrice(product.sale_price)"></span></span>
+              <div class="flex items-baseline gap-2 mt-1.5 mb-1.5">
+                <span class="price-sale">Rs. <span x-text="formatPrice(product.sale_price)"></span></span>
                 <span
                   x-show="product.retail_price && product.retail_price > product.sale_price"
-                  class="text-xs text-slate-400 line-through"
+                  class="price-retail"
                   x-text="'Rs. ' + formatPrice(product.retail_price)"
                 ></span>
               </div>
 
-              <!-- Color + Fabric chips -->
-              <div class="flex flex-wrap gap-1 mb-2.5" x-show="product.color || product.fabric">
-                <span
-                  x-show="product.color"
-                  class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-slate-100 rounded text-[10px] text-slate-600"
-                >
-                  <span class="w-2 h-2 rounded-full border border-slate-300" :style="`background-color: ${colorToHex(product.color)}`"></span>
+              <!-- Subtitle: color • fabric -->
+              <div class="product-subtitle mb-2.5" x-show="product.color || product.fabric">
+                <span x-show="product.color" class="inline-flex items-center gap-1">
+                  <span class="color-dot" :style="`background-color: ${colorToHex(product.color)}`"></span>
                   <span x-text="product.color"></span>
                 </span>
-                <span
-                  x-show="product.fabric"
-                  class="px-1.5 py-0.5 bg-slate-100 rounded text-[10px] text-slate-600"
-                  x-text="product.fabric"
-                ></span>
+                <span x-show="product.color && product.fabric">•</span>
+                <span x-show="product.fabric" x-text="product.fabric"></span>
               </div>
 
-              <!-- v0.16.0: Bigger WhatsApp CTA (full-width, more padding) -->
+              <!-- v0.19.0: Bigger WhatsApp CTA (full-width, premium green) -->
               <a
                 :href="whatsappLink(product)"
                 target="_blank"
                 rel="noopener noreferrer"
                 @click="trackClick(product)"
-                class="flex items-center justify-center gap-2 w-full py-3 bg-[#25D366] hover:bg-[#1eb858] text-white rounded-lg text-sm font-bold transition-colors shadow-md mb-2"
-                :class="{ 'opacity-50 pointer-events-none': product.availability === 'sold_out' }"
+                class="wa-cta"
+                style="padding: 12px 16px; font-size: 0.9rem; border-radius: 10px;"
+                :class="{ 'disabled': product.availability === 'sold_out' }"
               >
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 <span>Order on WhatsApp</span>
               </a>
 
               <!-- v0.16.0: Share + Copy Link buttons (compact row) -->
-              <div class="flex gap-1.5">
+              <div class="flex gap-1.5 mt-2">
                 <button
                   @click="shareProduct(product)"
                   class="flex-1 flex items-center justify-center gap-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-md text-[11px] font-medium transition-colors"
@@ -298,6 +299,7 @@
   </div>
 
   <!-- ==================== PRODUCT DETAIL MODAL ==================== -->
+  <!-- v0.19.0: Premium modal — brand strip + gallery + price block + WhatsApp CTA -->
   <div
     x-show="selectedProduct"
     @click.self="closeProduct()"
@@ -305,73 +307,134 @@
     class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
     style="display: none;"
   >
-    <!-- v0.17.0: Modal restructured — content scrolls, sticky WhatsApp bar at bottom -->
-    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" @click.stop>
+    <div class="modal-shell" @click.stop>
       <template x-if="selectedProduct">
         <div class="flex flex-col flex-1 overflow-hidden">
+          <!-- v0.19.0: Brand strip header -->
+          <div class="modal-brand-strip">
+            <span class="brand-mark">A Collection</span>
+            <button @click="closeProduct()" class="close-btn" aria-label="Close">✕</button>
+          </div>
+
           <!-- Scrollable content area -->
           <div class="flex-1 overflow-y-auto">
             <div class="grid md:grid-cols-2 gap-0">
-              <!-- Image area -->
-              <div class="bg-slate-100">
-                <div class="aspect-square">
+              <!-- Image gallery -->
+              <div>
+                <div class="modal-main-image">
                   <img
                     :src="productImageByIndex(selectedProduct, selectedImageIndex)"
                     :alt="selectedProduct.name"
-                    class="w-full h-full object-contain"
                     @error="onImageError($event)"
                   />
                 </div>
                 <!-- Thumbnail strip for multiple images -->
-                <div x-show="selectedProduct.images.length > 1" class="flex gap-1 p-2 overflow-x-auto bg-white">
+                <div x-show="selectedProduct.images.length > 1" class="flex gap-2 p-3 overflow-x-auto bg-white border-t border-slate-100">
                   <template x-for="(img, idx) in selectedProduct.images" :key="idx">
                     <button
                       @click="selectImage(idx)"
-                      class="w-14 h-14 shrink-0 rounded-md overflow-hidden border-2 transition-colors"
-                      :class="selectedImageIndex === idx ? 'border-violet-600' : 'border-transparent'"
+                      class="modal-thumb"
+                      :class="{ 'active': selectedImageIndex === idx }"
                     >
-                      <img :src="`data/images/${img}`" :alt="`Image ${idx+1}`" class="w-full h-full object-cover" @error="onImageError($event)" />
+                      <img :src="`data/images/${img}`" :alt="`Image ${idx+1}`" @error="onImageError($event)" />
                     </button>
                   </template>
                 </div>
               </div>
+
               <!-- Details -->
-              <div class="p-5 space-y-3">
-                <div class="flex items-start justify-between">
-                  <div>
-                    <h2 class="text-xl font-bold text-slate-900" x-text="selectedProduct.name"></h2>
-                    <p x-show="selectedProduct.sku" class="text-xs text-slate-500 mt-0.5">SKU: <span x-text="selectedProduct.sku"></span></p>
-                  </div>
-                  <button @click="closeProduct()" class="p-1 text-slate-400 hover:text-slate-600">✕</button>
+              <div class="p-5 space-y-4">
+                <!-- Title + subtitle -->
+                <div>
+                  <h2 class="modal-title" x-text="selectedProduct.name"></h2>
+                  <p class="modal-subtitle" x-show="selectedProduct.color || selectedProduct.fabric || selectedProduct.season">
+                    <span x-show="selectedProduct.color" class="inline-flex items-center gap-1">
+                      <span class="color-dot" :style="`background-color: ${colorToHex(selectedProduct.color)}`"></span>
+                      <span x-text="selectedProduct.color"></span>
+                    </span>
+                    <span x-show="selectedProduct.color && selectedProduct.fabric" class="sep">•</span>
+                    <span x-show="selectedProduct.fabric" x-text="selectedProduct.fabric"></span>
+                    <span x-show="(selectedProduct.color || selectedProduct.fabric) && selectedProduct.season" class="sep">•</span>
+                    <span x-show="selectedProduct.season" x-text="selectedProduct.season"></span>
+                  </p>
                 </div>
 
-                <div class="flex items-baseline gap-2">
-                  <span class="text-2xl font-bold text-violet-700">Rs. <span x-text="formatPrice(selectedProduct.sale_price)"></span></span>
+                <!-- v0.19.0: Price block — cream bg + maroon left border + SAVE badge -->
+                <div class="modal-price-block">
+                  <span class="modal-price-sale">Rs. <span x-text="formatPrice(selectedProduct.sale_price)"></span></span>
                   <span
                     x-show="selectedProduct.retail_price && selectedProduct.retail_price > selectedProduct.sale_price"
-                    class="text-sm text-slate-400 line-through"
+                    class="modal-price-retail"
                     x-text="'Rs. ' + formatPrice(selectedProduct.retail_price)"
+                  ></span>
+                  <span
+                    x-show="selectedProduct.retail_price && selectedProduct.retail_price > selectedProduct.sale_price"
+                    class="modal-save-badge"
+                    x-text="'SAVE Rs. ' + formatPrice(selectedProduct.retail_price - selectedProduct.sale_price) + ' (' + Math.round((selectedProduct.retail_price - selectedProduct.sale_price) / selectedProduct.retail_price * 100) + '% OFF)'"
                   ></span>
                 </div>
 
-                <!-- Sold out badge in modal -->
-                <div x-show="selectedProduct.availability === 'sold_out'" class="inline-block bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">
-                  SOLD OUT
+                <!-- Availability badge -->
+                <div>
+                  <span
+                    x-show="selectedProduct.availability !== 'sold_out'"
+                    class="availability-badge availability-in"
+                  >
+                    <span class="availability-dot"></span>
+                    In Stock
+                  </span>
+                  <span
+                    x-show="selectedProduct.availability === 'sold_out'"
+                    class="availability-badge availability-out"
+                  >
+                    <span class="availability-dot"></span>
+                    Out of Stock
+                  </span>
                 </div>
 
-                <div class="flex flex-wrap gap-2">
-                  <span x-show="selectedProduct.category" class="px-2 py-1 bg-violet-100 text-violet-700 rounded text-xs font-medium" x-text="selectedProduct.category"></span>
-                  <span x-show="selectedProduct.fabric" class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs" x-text="selectedProduct.fabric"></span>
-                  <span x-show="selectedProduct.color" class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs" x-text="selectedProduct.color"></span>
-                  <span x-show="selectedProduct.season" class="px-2 py-1 bg-amber-100 text-amber-700 rounded text-xs" x-text="selectedProduct.season"></span>
+                <!-- Details grid (2-column) -->
+                <div class="details-grid">
+                  <div class="detail-item" x-show="selectedProduct.category">
+                    <span class="detail-label">Category</span>
+                    <span class="detail-value" x-text="selectedProduct.category"></span>
+                  </div>
+                  <div class="detail-item" x-show="selectedProduct.color">
+                    <span class="detail-label">Color</span>
+                    <span class="detail-value" x-text="selectedProduct.color"></span>
+                  </div>
+                  <div class="detail-item" x-show="selectedProduct.fabric">
+                    <span class="detail-label">Fabric</span>
+                    <span class="detail-value" x-text="selectedProduct.fabric"></span>
+                  </div>
+                  <div class="detail-item" x-show="selectedProduct.season">
+                    <span class="detail-label">Season</span>
+                    <span class="detail-value" x-text="selectedProduct.season"></span>
+                  </div>
+                  <div class="detail-item" x-show="selectedProduct.sku">
+                    <span class="detail-label">SKU</span>
+                    <span class="detail-value" x-text="selectedProduct.sku"></span>
+                  </div>
                 </div>
 
-                <div x-show="selectedProduct.description" class="text-sm text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+                <!-- Description block -->
+                <div x-show="selectedProduct.description" class="modal-description">
                   <p x-text="selectedProduct.description"></p>
                 </div>
 
-                <!-- Share + Copy buttons -->
-                <div class="flex gap-2 pt-2 pb-4">
+                <!-- v0.19.0: WhatsApp CTA (PRIMARY action) -->
+                <a
+                  :href="whatsappLink(selectedProduct)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="wa-cta"
+                  :class="{ 'disabled': selectedProduct.availability === 'sold_out' }"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  <span>Order on WhatsApp</span>
+                </a>
+
+                <!-- Share + Copy Link (secondary actions) -->
+                <div class="flex gap-2">
                   <button
                     @click="shareProduct(selectedProduct)"
                     class="flex-1 flex items-center justify-center gap-1.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors"
@@ -392,12 +455,12 @@
             </div>
           </div>
 
-          <!-- v0.17.0: STICKY BOTTOM ACTION BAR — always visible, never scrolls away -->
-          <div class="shrink-0 border-t border-slate-200 bg-white px-4 py-3 flex items-center gap-3 safe-bottom">
+          <!-- v0.17.0 STICKY BOTTOM ACTION BAR — kept for mobile, v0.19.0: branded -->
+          <div class="sticky-wa-bar safe-bottom">
             <!-- Price (compact, left side) -->
             <div class="shrink-0">
-              <div class="text-lg font-bold text-violet-700">Rs. <span x-text="formatPrice(selectedProduct.sale_price)"></span></div>
-              <div x-show="selectedProduct.retail_price && selectedProduct.retail_price > selectedProduct.sale_price" class="text-[10px] text-slate-400 line-through">
+              <div class="price-sale" style="font-size: 1.1rem;">Rs. <span x-text="formatPrice(selectedProduct.sale_price)"></span></div>
+              <div x-show="selectedProduct.retail_price && selectedProduct.retail_price > selectedProduct.sale_price" class="price-retail" style="font-size: 0.7rem;">
                 Rs. <span x-text="formatPrice(selectedProduct.retail_price)"></span>
               </div>
             </div>
@@ -406,8 +469,9 @@
               :href="whatsappLink(selectedProduct)"
               target="_blank"
               rel="noopener noreferrer"
-              class="flex-1 flex items-center justify-center gap-2 py-3 bg-[#25D366] hover:bg-[#1eb858] text-white rounded-xl font-bold transition-colors shadow-md"
-              :class="{ 'opacity-50 pointer-events-none': selectedProduct.availability === 'sold_out' }"
+              class="wa-cta"
+              style="flex: 1; padding: 12px 16px; font-size: 0.95rem; border-radius: 10px;"
+              :class="{ 'disabled': selectedProduct.availability === 'sold_out' }"
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               <span>Order on WhatsApp</span>
@@ -419,11 +483,12 @@
   </div>
 
   <!-- ==================== FOOTER ==================== -->
-  <footer class="bg-slate-900 text-slate-400 mt-12">
+  <!-- v0.19.0: Premium dark footer with gold accent -->
+  <footer class="brand-footer">
     <div class="max-w-7xl mx-auto px-4 py-8 text-center text-sm">
-      <p class="font-bold text-white text-base mb-1" x-text="catalog.brand || 'A Collection'"></p>
+      <p class="brand-name-footer mb-1" x-text="catalog.brand || 'A Collection'"></p>
       <p class="text-xs">Narowal • Shakargarh • Zafarwal</p>
-      <p class="text-[10px] mt-3 text-slate-500">Powered by Head Office System</p>
+      <p class="text-[10px] mt-3 opacity-60">Powered by Head Office System</p>
     </div>
   </footer>
 

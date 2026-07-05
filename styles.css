@@ -2,13 +2,42 @@
  * Mobile-first, mobile-optimized. Tailwind handles most styling via CDN.
  * This file contains only custom additions Tailwind can't do (or that need
  * to work even before Tailwind CDN loads.
+ *
+ * v0.19.0: Brand identity tokens + premium UI utilities.
+ *          Matches HO static page design language (maroon/gold/cream).
  */
+
+/* ============================================================
+ * v0.19.0: BRAND IDENTITY TOKENS
+ * Same names as HO static page. Do NOT rename — sync requirement.
+ * ============================================================ */
+:root {
+  --brand-primary: #8B1538;   /* maroon — premium, traditional */
+  --brand-primary-dark: #6B1028; /* maroon gradient end */
+  --brand-accent:  #C9A961;   /* gold — luxury accent */
+  --brand-bg:      #FFF8F0;   /* cream — warm background */
+  --brand-surface: #FFFFFF;   /* white — cards */
+  --brand-text:    #1F2937;   /* dark gray — body text */
+  --brand-muted:   #6B7280;   /* medium gray — secondary text */
+  --brand-danger:  #DC2626;   /* red — discount badges */
+  --whatsapp:      #25D366;   /* WhatsApp green — CTA */
+  --whatsapp-dark: #128C7E;   /* WhatsApp dark — hover */
+}
 
 /* Hide Alpine.js templates before Alpine initializes to prevent FOUC */
 [x-cloak] { display: none !important; }
 
 /* Smooth scrolling for in-page navigation */
 html { scroll-behavior: smooth; }
+
+/* v0.19.0: Body uses brand cream background */
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+}
 
 /* Better tap targets on mobile — min 44px */
 @media (max-width: 768px) {
@@ -50,25 +79,444 @@ aside::-webkit-scrollbar-thumb {
   border-radius: 4px;
 }
 
-/* Product card hover lift effect (desktop) */
+/* ============================================================
+ * v0.19.0: HEADER — maroon gradient + gold accent
+ * ============================================================ */
+.brand-header {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+  border-bottom: 3px solid var(--brand-accent);
+  box-shadow: 0 2px 8px rgba(139, 21, 56, 0.15);
+}
+
+.brand-name {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+.brand-tagline {
+  font-size: 0.7rem;
+  color: var(--brand-accent);
+  letter-spacing: 3px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Search input on maroon header — light surface for contrast */
+.brand-search {
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--brand-accent);
+  color: var(--brand-text);
+}
+.brand-search::placeholder { color: var(--brand-muted); }
+.brand-search:focus {
+  background-color: #FFFFFF;
+  border-color: var(--brand-accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.3);
+}
+
+/* Install button on maroon header — gold accent */
+.brand-btn-install {
+  background-color: var(--brand-accent);
+  color: var(--brand-primary-dark);
+}
+.brand-btn-install:hover { background-color: #B8954F; }
+
+/* Filter toggle on maroon header */
+.brand-btn-filter {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+}
+.brand-btn-filter:hover { background-color: rgba(255, 255, 255, 0.25); }
+
+/* ============================================================
+ * v0.19.0: PRODUCT CARD — premium shadows + brand colors
+ * ============================================================ */
+.product-card {
+  background-color: var(--brand-surface);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(139, 21, 56, 0.08);
+  box-shadow: 0 2px 8px rgba(139, 21, 56, 0.06);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
 @media (hover: hover) {
-  article:hover {
-    transform: translateY(-2px);
-    transition: transform 0.2s ease;
+  .product-card:hover {
+    box-shadow: 0 8px 24px rgba(139, 21, 56, 0.15);
+    transform: translateY(-3px);
   }
 }
 
-/* Better mobile font rendering */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+.product-card-image {
+  aspect-ratio: 1 / 1;
+  background-color: #F9FAFB;
+  overflow: hidden;
+  position: relative;
+}
+.product-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+}
+.product-card:hover .product-card-image img {
+  transform: scale(1.06);
 }
 
-/* Prevent text selection on tap (mobile UX) — except for actual text content */
-button, label, .no-select {
-  -webkit-user-select: none;
-  user-select: none;
+/* Discount badge — top-left of product image */
+.discount-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: var(--brand-danger);
+  color: #FFFFFF;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+  z-index: 2;
+  letter-spacing: 0.3px;
+}
+
+/* Sold out overlay (kept from v0.16) */
+.sold-out-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+.sold-out-overlay span {
+  background-color: var(--brand-danger);
+  color: #FFFFFF;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Category badge (subtle, top-right) */
+.category-chip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  color: var(--brand-primary);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  z-index: 2;
+}
+
+/* Card body */
+.product-card-body {
+  padding: 12px;
+}
+.product-card-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--brand-text);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.5em;
+  cursor: pointer;
+}
+.product-card-title:hover { color: var(--brand-primary); }
+
+/* Price block */
+.price-sale {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+}
+.price-retail {
+  font-size: 0.8rem;
+  color: var(--brand-muted);
+  text-decoration: line-through;
+}
+
+/* Subtitle: color bullet fabric */
+.product-subtitle {
+  font-size: 0.72rem;
+  color: var(--brand-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.product-subtitle .color-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid #D1D5DB;
+}
+
+/* ============================================================
+ * v0.19.0: PRODUCT MODAL — premium layout
+ * ============================================================ */
+.modal-shell {
+  background-color: var(--brand-surface);
+  border-radius: 16px;
+  max-width: 56rem;
+  width: 100%;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+}
+
+/* Modal brand header strip */
+.modal-brand-strip {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+  color: #FFFFFF;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--brand-accent);
+}
+.modal-brand-strip .brand-mark {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.modal-brand-strip .close-btn {
+  color: rgba(255, 255, 255, 0.85);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+.modal-brand-strip .close-btn:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Modal image gallery */
+.modal-main-image {
+  background-color: var(--brand-bg);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-main-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.modal-thumb {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  background-color: #F3F4F6;
+  transition: border-color 0.2s ease;
+}
+.modal-thumb.active { border-color: var(--brand-primary); }
+.modal-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Modal title + subtitle */
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brand-text);
+  line-height: 1.3;
+}
+.modal-subtitle {
+  font-size: 0.8rem;
+  color: var(--brand-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.modal-subtitle .sep { color: #D1D5DB; }
+
+/* Modal price block — cream bg + left maroon border */
+.modal-price-block {
+  background-color: var(--brand-bg);
+  border-left: 4px solid var(--brand-primary);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.modal-price-sale {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+  line-height: 1;
+}
+.modal-price-retail {
+  font-size: 1rem;
+  color: var(--brand-muted);
+  text-decoration: line-through;
+}
+.modal-save-badge {
+  background-color: var(--brand-danger);
+  color: #FFFFFF;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+}
+
+/* Availability badge */
+.availability-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.availability-in {
+  background-color: #DCFCE7;
+  color: #166534;
+}
+.availability-out {
+  background-color: #FEE2E2;
+  color: #991B1B;
+}
+.availability-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: currentColor;
+}
+
+/* Details grid (2-column) */
+.details-grid {
+  background-color: #FAFAFA;
+  border-radius: 10px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.details-grid .detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.details-grid .detail-label {
+  font-size: 0.65rem;
+  color: var(--brand-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.details-grid .detail-value {
+  font-size: 0.85rem;
+  color: var(--brand-text);
+  font-weight: 500;
+}
+
+/* Description block */
+.modal-description {
+  background-color: var(--brand-bg);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.88rem;
+  color: var(--brand-text);
+  line-height: 1.7;
+}
+
+/* WhatsApp CTA in modal */
+.wa-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  background-color: var(--whatsapp);
+  color: #FFFFFF;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+.wa-cta:hover { background-color: var(--whatsapp-dark); }
+.wa-cta:active { transform: scale(0.98); }
+.wa-cta:disabled,
+.wa-cta.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Secondary action — muted link */
+.secondary-action {
+  font-size: 0.8rem;
+  color: var(--brand-muted);
+  text-align: center;
+  padding: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.secondary-action:hover { color: var(--brand-primary); }
+
+/* Sticky bottom WhatsApp bar in modal (v0.17.0 — kept, polished) */
+.sticky-wa-bar {
+  background-color: var(--brand-surface);
+  border-top: 1px solid #E5E7EB;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ============================================================
+ * v0.19.0: FOOTER — premium dark with gold accent
+ * ============================================================ */
+.brand-footer {
+  background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
+  border-top: 3px solid var(--brand-accent);
+  color: #D1D5DB;
+  margin-top: 48px;
+}
+.brand-footer .brand-name-footer {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brand-accent);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 /* Safe area insets for notched phones (iPhone X+) */
@@ -82,13 +530,19 @@ button, label, .no-select {
   }
 }
 
-/* Focus visible for keyboard navigation (accessibility) */
+/* Focus visible for keyboard navigation (accessibility) — v0.19.0: maroon */
 *:focus-visible {
-  outline: 2px solid #7c3aed;
+  outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
 }
 
 /* Image loading placeholder color */
 img {
-  background-color: #f3f4f6;
+  background-color: #F3F4F6;
+}
+
+/* Prevent text selection on tap (mobile UX) — except for actual text content */
+button, label, .no-select {
+  -webkit-user-select: none;
+  user-select: none;
 }
