@@ -188,12 +188,21 @@
         </template>
       </div>
 
-      <!-- Empty state -->
-      <div x-show="!loading && filteredProducts.length === 0" class="text-center py-16">
+      <!-- v0.22.0: Offline / load error state (offline + never cached) -->
+      <div x-show="!loading && loadError" class="text-center py-16">
+        <div class="text-5xl mb-3">📡</div>
+        <h3 class="text-lg font-semibold text-slate-700">Catalog load nahi ho saka</h3>
+        <p class="text-sm text-slate-500 mt-1">Aap offline hain ya internet connection issue hai.</p>
+        <p class="text-xs text-slate-400 mt-2">Pehli baar online aakar catalog kholein taake offline bhi chale.</p>
+        <button @click="location.reload()" class="mt-4 px-4 py-2 bg-[#8B1538] hover:bg-[#6B1028] text-white rounded-lg text-sm font-medium transition-colors">Try Again</button>
+      </div>
+
+      <!-- Empty state (filters returned nothing) -->
+      <div x-show="!loading && !loadError && filteredProducts.length === 0" class="text-center py-16">
         <div class="text-5xl mb-3">🔍</div>
         <h3 class="text-lg font-semibold text-slate-700">No products found</h3>
         <p class="text-sm text-slate-500 mt-1">Try changing filters or search query</p>
-        <button @click="clearAllFilters()" class="mt-4 px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700">Clear all filters</button>
+        <button @click="clearAllFilters()" class="mt-4 px-4 py-2 bg-[#8B1538] hover:bg-[#6B1028] text-white rounded-lg text-sm font-medium transition-colors">Clear all filters</button>
       </div>
 
       <!-- Product grid -->

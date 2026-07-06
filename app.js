@@ -62,6 +62,7 @@ function catalogApp() {
     products: [],
     filteredProducts: [],
     loading: true,
+    loadError: false,  // v0.22.0: catalog.json fetch failed (offline + no cache)
     searchQuery: '',
     sortBy: 'newest',
     showFilters: false,
@@ -137,8 +138,11 @@ function catalogApp() {
         this.applyFilters();
       } catch (err) {
         console.error('[catalog] Failed to load catalog.json:', err);
+        // v0.22.0: Distinguish fetch error (offline/never cached) from empty catalog.
+        // Show friendly offline message instead of misleading "No products found".
         this.products = [];
         this.filteredProducts = [];
+        this.loadError = true;
       } finally {
         this.loading = false;
       }

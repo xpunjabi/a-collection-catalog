@@ -22,6 +22,7 @@
  * If user ignores the toast, they'll get the new version on next visit.
  */
 
+// v0.22.0: Offline resilience — 503 Response on cache miss + network fail, loadError state in app.js.
 // v0.21.0: Handle low_stock availability + LOW STOCK badge (orange urgency).
 // v0.20.0: 3 UI fixes from Ali bhai's test (badge size, card height, 1 WA button).
 // v0.19.0: SPA polish — brand identity + Nishat-inspired premium UI.
@@ -29,7 +30,7 @@
 // v0.17.2: SKU sanitization fix (D#26 → D-26) for product URLs.
 // v0.17.1: Bump this version on every catalog code update (HTML/JS/CSS changes)
 // Format: YYYYMMDD-HHMM (deploy timestamp)
-const SW_VERSION = '20260705-1430-v10';
+const SW_VERSION = '20260706-1200-v11';
 const APP_SHELL_CACHE = `acollection-shell-${SW_VERSION}`;
 const DATA_CACHE = `acollection-data-v2`;
 
@@ -122,6 +123,9 @@ self.addEventListener('fetch', (event) => {
 });
 
 // Stale-while-revalidate: serve from cache immediately, fetch fresh in background
+// v0.22.0: Added offline resilience — if both cache miss AND network fail,
+// return a proper error Response (503) so app.js can show friendly message
+// instead of misleading "No products found".
 function staleWhileRevalidate(request, cacheName) {
   return caches.open(cacheName).then((cache) => {
     return cache.match(request).then((cached) => {
@@ -136,7 +140,17 @@ function staleWhileRevalidate(request, cacheName) {
         return cached;
       });
       // Return cached immediately, or wait for network if no cache
-      return cached || fetchPromise;
+      // v0.22.0: If both cache AND network fail, return 503 Response
+      // (was: returning undefined → browser shows generic network error)
+      if (cached) return cached;
+      return fetchPromise.then((response) => {
+        // fetchPromise may have resolved to cached (which is undefined here)
+        // OR to a fresh response — either way, return it
+        return response || new Response('', {
+          status: 503,
+          statusText: 'Service Unavailable (offline + no cache)'
+        });
+      });
     });
   });
 }
