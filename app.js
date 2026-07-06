@@ -88,7 +88,11 @@ function catalogApp() {
       if (this.filters.fabric) out.push({ key: 'fabric', value: this.filters.fabric, label: this.filters.fabric });
       if (this.filters.color) out.push({ key: 'color', value: this.filters.color, label: this.filters.color });
       if (this.filters.season) out.push({ key: 'season', value: this.filters.season, label: this.filters.season });
-      if (this.filters.availability) out.push({ key: 'availability', value: this.filters.availability, label: this.filters.availability === 'available' ? 'Available' : 'Sold Out' });
+      // v0.21.0: Added low_stock label for active filter chip
+      if (this.filters.availability) {
+        const labels = { available: 'Available', low_stock: 'Low Stock', sold_out: 'Sold Out' };
+        out.push({ key: 'availability', value: this.filters.availability, label: labels[this.filters.availability] || this.filters.availability });
+      }
       return out;
     },
 
@@ -445,6 +449,10 @@ function catalogApp() {
               <span>Available</span>
             </label>
             <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer hover:text-slate-900">
+              <input type="radio" name="availability" value="low_stock" ${this.filters.availability === 'low_stock' ? 'checked' : ''} @change="$data.filters.availability = 'low_stock'; $data.applyFilters()" class="text-violet-600 focus:ring-violet-500" />
+              <span>Low Stock</span>
+            </label>
+            <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer hover:text-slate-900">
               <input type="radio" name="availability" value="sold_out" ${this.filters.availability === 'sold_out' ? 'checked' : ''} @change="$data.filters.availability = 'sold_out'; $data.applyFilters()" class="text-violet-600 focus:ring-violet-500" />
               <span>Sold Out</span>
             </label>
@@ -503,9 +511,18 @@ function catalogApp() {
       const phone = (this.catalog.whatsapp_number || '').replace(/[^\d]/g, '');
       const productUrl = this.productUrl(product);
       // v0.19.0: Hinglish message — matches HO static page template.
-      // Friendly, clear, mobile-friendly (Narowal customers prefer Roman Urdu).
+      // v0.21.0: Add urgency for low_stock, alternative ask for sold_out.
+      const availability = product.availability || 'available';
+      let greeting;
+      if (availability === 'low_stock') {
+        greeting = `Assalam o alaikum! Ye suit low stock me hai, main ispe interested hoon:`;
+      } else if (availability === 'sold_out') {
+        greeting = `Assalam o alaikum! Ye suit sold out hai, kya aapke paas similar kuch hai?`;
+      } else {
+        greeting = `Assalam o alaikum! Main is product me interested hoon:`;
+      }
       const lines = [
-        `Assalam o alaikum! Main is product me interested hoon:`,
+        greeting,
         ``,
         `*${product.name}*`,
         `SKU: ${product.sku || product.id}`,

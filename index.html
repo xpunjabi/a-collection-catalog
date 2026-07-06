@@ -209,6 +209,11 @@
                 class="discount-badge"
                 x-text="'SAVE Rs. ' + formatPrice(product.retail_price - product.sale_price)"
               ></span>
+              <!-- v0.21.0: LOW STOCK badge (orange, top-left, stacks below discount) -->
+              <span
+                x-show="product.availability === 'low_stock'"
+                class="low-stock-badge"
+              >LOW STOCK</span>
               <!-- Category chip (top-right) -->
               <span
                 x-show="product.category"
@@ -374,14 +379,21 @@
                   ></span>
                 </div>
 
-                <!-- Availability badge -->
+                <!-- Availability badge — v0.21.0: 3 states (available/low_stock/sold_out) -->
                 <div>
                   <span
-                    x-show="selectedProduct.availability !== 'sold_out'"
+                    x-show="selectedProduct.availability !== 'sold_out' && selectedProduct.availability !== 'low_stock'"
                     class="availability-badge availability-in"
                   >
                     <span class="availability-dot"></span>
                     In Stock
+                  </span>
+                  <span
+                    x-show="selectedProduct.availability === 'low_stock'"
+                    class="availability-badge availability-low"
+                  >
+                    <span class="availability-dot"></span>
+                    Low Stock — Hurry!
                   </span>
                   <span
                     x-show="selectedProduct.availability === 'sold_out'"

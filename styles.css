@@ -215,6 +215,45 @@ aside::-webkit-scrollbar-thumb {
   }
 }
 
+/* v0.21.0: LOW STOCK badge — orange, top-left (below discount badge if both)
+ * Shows when product.availability === 'low_stock' (HO qty 1-2).
+ * Urgency indicator — item available but running out.
+ */
+.low-stock-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background-color: #D97706;  /* orange */
+  color: #FFFFFF;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(217, 119, 6, 0.3);
+  z-index: 2;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+/* v0.21.0: If both discount-badge AND low-stock-badge show, stack vertically */
+.low-stock-badge + .discount-badge,
+.discount-badge + .low-stock-badge {
+  top: 30px;  /* stack below the first badge */
+}
+
+/* v0.20.0: Even more compact on small phones (<=480px) — applies to low-stock too */
+@media (max-width: 480px) {
+  .low-stock-badge {
+    font-size: 0.55rem;
+    padding: 2px 5px;
+    top: 5px;
+  }
+  .low-stock-badge + .discount-badge,
+  .discount-badge + .low-stock-badge {
+    top: 25px;
+  }
+}
+
 /* Sold out overlay (kept from v0.16) */
 .sold-out-overlay {
   position: absolute;
@@ -447,6 +486,14 @@ aside::-webkit-scrollbar-thumb {
 .availability-in {
   background-color: #DCFCE7;
   color: #166534;
+}
+/* v0.21.0: Low Stock — orange urgency indicator */
+.availability-low {
+  background-color: #FFEDD5;  /* light orange bg */
+  color: #D97706;             /* orange text */
+}
+.availability-low .availability-dot {
+  background-color: #D97706;  /* orange dot */
 }
 .availability-out {
   background-color: #FEE2E2;

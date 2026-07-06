@@ -22,13 +22,14 @@
  * If user ignores the toast, they'll get the new version on next visit.
  */
 
+// v0.21.0: Handle low_stock availability + LOW STOCK badge (orange urgency).
 // v0.20.0: 3 UI fixes from Ali bhai's test (badge size, card height, 1 WA button).
 // v0.19.0: SPA polish — brand identity + Nishat-inspired premium UI.
 // v0.17.3: Add hyphen collapse to sanitizeSku() to match HO Rust sanitize_slug().
 // v0.17.2: SKU sanitization fix (D#26 → D-26) for product URLs.
 // v0.17.1: Bump this version on every catalog code update (HTML/JS/CSS changes)
 // Format: YYYYMMDD-HHMM (deploy timestamp)
-const SW_VERSION = '20260705-1130-v9';
+const SW_VERSION = '20260705-1430-v10';
 const APP_SHELL_CACHE = `acollection-shell-${SW_VERSION}`;
 const DATA_CACHE = `acollection-data-v2`;
 
