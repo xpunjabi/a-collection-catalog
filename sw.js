@@ -30,7 +30,7 @@
 // v0.17.2: SKU sanitization fix (D#26 → D-26) for product URLs.
 // v0.17.1: Bump this version on every catalog code update (HTML/JS/CSS changes)
 // Format: YYYYMMDD-HHMM (deploy timestamp)
-const SW_VERSION = '20260706-1200-v11';
+const SW_VERSION = '20260708-1330-v12';
 const APP_SHELL_CACHE = `acollection-shell-${SW_VERSION}`;
 const DATA_CACHE = `acollection-data-v2`;
 

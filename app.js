@@ -99,7 +99,7 @@ function catalogApp() {
 
     async init() {
       try {
-        const url = `data/catalog.json?v=${Date.now()}`;
+        const url = `data/catalog.json`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         this.catalog = await res.json();
