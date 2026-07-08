@@ -83,6 +83,7 @@
           x-model="searchQuery"
           @input="applyFilters()"
           placeholder="Search by name, color, fabric..."
+          aria-label="Search products"
           class="brand-search w-full rounded-full pl-11 pr-10 py-2.5 text-sm"
         />
         <svg class="w-5 h-5 absolute left-3.5 top-3 text-[#8B1538]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
@@ -118,7 +119,7 @@
       <aside class="absolute right-0 top-0 bottom-0 w-72 bg-white shadow-xl p-4 overflow-y-auto" @click.stop>
         <div class="flex items-center justify-between mb-4">
           <h2 class="font-bold text-lg">Filters</h2>
-          <button @click="showFilters = false" class="p-1 text-slate-400">✕</button>
+          <button @click="showFilters = false" class="p-1 text-slate-400" aria-label="Close filters">✕</button>
         </div>
         <div x-html="filterPanelHtml()"></div>
       </aside>
@@ -166,7 +167,7 @@
             />
             <span>Show Sold Out</span>
           </label>
-          <select x-model="sortBy" @change="applyFilters()" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+          <select x-model="sortBy" @change="applyFilters()" aria-label="Sort products" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
             <option value="newest">Newest</option>
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
@@ -276,7 +277,6 @@
                 :href="whatsappLink(product)"
                 target="_blank"
                 rel="noopener noreferrer"
-                @click="trackClick(product)"
                 class="wa-cta"
                 style="padding: 12px 16px; font-size: 0.9rem; border-radius: 10px;"
                 :class="{ 'disabled': product.availability === 'sold_out' }"
@@ -490,7 +490,7 @@
     <div class="max-w-7xl mx-auto px-4 py-8 text-center text-sm">
       <p class="brand-name-footer mb-1" x-text="catalog.brand || 'A Collection'"></p>
       <p class="text-xs">Narowal • Shakargarh • Zafarwal</p>
-      <p class="text-[10px] mt-3 opacity-60">Powered by Head Office System</p>
+      <p class="text-[10px] mt-3 text-slate-400">Powered by Head Office System</p>
     </div>
   </footer>
 

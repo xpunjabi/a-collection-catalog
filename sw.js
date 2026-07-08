@@ -30,7 +30,7 @@
 // v0.17.2: SKU sanitization fix (D#26 → D-26) for product URLs.
 // v0.17.1: Bump this version on every catalog code update (HTML/JS/CSS changes)
 // Format: YYYYMMDD-HHMM (deploy timestamp)
-const SW_VERSION = '20260708-1330-v12';
+const SW_VERSION = '20260708-1400-v13';
 const APP_SHELL_CACHE = `acollection-shell-${SW_VERSION}`;
 const DATA_CACHE = `acollection-data-v2`;
 
@@ -55,10 +55,8 @@ const APP_SHELL_FILES = [
 
 // Install: pre-cache app shell
 self.addEventListener('install', (event) => {
-  console.log(`[SW ${SW_VERSION}] Installing...`);
   event.waitUntil(
     caches.open(APP_SHELL_CACHE).then((cache) => {
-      console.log(`[SW ${SW_VERSION}] Caching app shell`);
       return cache.addAll(APP_SHELL_FILES);
     })
   );
@@ -70,14 +68,12 @@ self.addEventListener('install', (event) => {
 
 // Activate: clean up old caches + claim clients
 self.addEventListener('activate', (event) => {
-  console.log(`[SW ${SW_VERSION}] Activating...`);
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys
           .filter((key) => key !== APP_SHELL_CACHE && key !== DATA_CACHE)
           .map((key) => {
-            console.log(`[SW ${SW_VERSION}] Deleting old cache:`, key);
             return caches.delete(key);
           })
       );

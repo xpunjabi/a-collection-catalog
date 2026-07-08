@@ -123,7 +123,6 @@ function catalogApp() {
           // Stash the event so it can be triggered later by our button
           this.deferredPrompt = e;
           this.canInstall = true;
-          console.log('[catalog] Install prompt available — showing Install button');
         });
 
         // Listen for successful install (hide button after install)
@@ -132,7 +131,6 @@ function catalogApp() {
           this.deferredPrompt = null;
           this.isInstalled = true;
           showToast('✓ App installed! Find it on your home screen.');
-          console.log('[catalog] PWA installed successfully');
         });
 
         this.applyFilters();
@@ -167,10 +165,8 @@ function catalogApp() {
       // Wait for user's choice
       const { outcome } = await this.deferredPrompt.userChoice;
       if (outcome === 'accepted') {
-        console.log('[catalog] User accepted install');
         showToast('Installing... Check your home screen in a moment.');
       } else {
-        console.log('[catalog] User dismissed install');
       }
 
       // The prompt can only be used once — clear it
@@ -586,10 +582,6 @@ function catalogApp() {
     selectImage(index) {
       this.selectedImageIndex = index;
     },
-
-    trackClick(product) {
-      console.log('[catalog] Product clicked:', product.id, product.name);
-    },
   };
 }
 
@@ -605,7 +597,6 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').then(
       (reg) => {
-        console.log('[catalog] Service Worker registered');
 
         // Listen for new SW versions taking control
         // When a new SW activates (via skipWaiting + clients.claim),
@@ -615,7 +606,6 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.addEventListener('controllerchange', () => {
           if (refreshing) return;
           refreshing = true;
-          console.log('[catalog] New Service Worker activated — update ready');
           // Show a persistent toast with a refresh button
           showUpdateToast();
         });
