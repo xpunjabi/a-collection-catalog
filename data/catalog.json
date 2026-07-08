@@ -1,9 +1,25 @@
 {
   "brand": "A Collection Narowal",
   "whatsapp_number": "923420830995",
-  "version": "2026-07-07T15:58:18.257502800+00:00",
-  "published_at": "2026-07-07T15:58:18.257502800+00:00",
+  "version": "2026-07-08T08:25:58.962306600+00:00",
+  "published_at": "2026-07-08T08:25:58.962306600+00:00",
   "products": [
+    {
+      "id": 15,
+      "name": "Lawn 2-Piece Suit - Teal Floral and Mustard Yellow",
+      "sku": "AC-1783498902880",
+      "sale_price": 1300.0,
+      "retail_price": 1500.0,
+      "category": "2 Piece",
+      "color": "Teal and Mustard Yellow",
+      "fabric": "Lawn",
+      "season": "Summer",
+      "description": "This unstitched two-piece suit features a vibrant teal shirt fabric adorned with an all-over multi-colored floral print, paired with a solid mustard yellow trouser fabric. Ideal for casual summer wear, the lightweight fabric offers comfort and breathability.",
+      "images": [
+        "1783498635620515100_thumbnail_catalog.jpg"
+      ],
+      "availability": "low_stock"
+    },
     {
       "id": 14,
       "name": "Nishat 3-Piece Unstitched Lawn Suit - Royal Blue Geometric",
@@ -217,7 +233,7 @@
         "1782986173285789400_thumbnail_catalog_catalog.jpg",
         "1782986253581506400_thumbnail_catalog_catalog.jpg"
       ],
-      "availability": "low_stock"
+      "availability": "sold_out"
     },
     {
       "id": 2,
