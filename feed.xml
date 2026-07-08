@@ -4,7 +4,25 @@
     <title>A Collection Narowal — Product Catalog</title>
     <link>https://xpunjabi.github.io/a-collection-catalog/</link>
     <description>Latest products from A Collection Narowal — order via WhatsApp 923420830995</description>
-    <last_build_date>Tue, 07 Jul 2026 15:58:18 +0000</last_build_date>
+    <last_build_date>Wed, 08 Jul 2026 08:25:58 +0000</last_build_date>
+    <item>
+      <g:id>15</g:id>
+      <g:title>Lawn 2-Piece Suit - Teal Floral and Mustard Yellow</g:title>
+      <g:description>This unstitched two-piece suit features a vibrant teal shirt fabric adorned with an all-over multi-colored floral print, paired with a solid mustard yellow trouser fabric. Ideal for casual summer wear, the lightweight fabric offers comfort and breathability.</g:description>
+      <g:link>https://xpunjabi.github.io/a-collection-catalog/products/AC-1783498902880.html</g:link>
+      <g:image_link>https://xpunjabi.github.io/a-collection-catalog/data/images/1783498635620515100_thumbnail_catalog.jpg</g:image_link>
+      <g:price>1300.00 PKR</g:price>
+      <g:availability>in stock</g:availability>
+      <g:brand>A Collection Narowal</g:brand>
+      <g:condition>new</g:condition>
+      <g:product_type>2 Piece</g:product_type>
+      <g:google_product_category>1604</g:google_product_category>
+      <g:custom_label_0>Teal and Mustard Yellow</g:custom_label_0>
+      <g:custom_label_1>Lawn</g:custom_label_1>
+      <g:custom_label_2>Summer</g:custom_label_2>
+      <g:mpn>AC-1783498902880</g:mpn>
+      <g:identifier_exists>no</g:identifier_exists>
+    </item>
     <item>
       <g:id>14</g:id>
       <g:title>Nishat 3-Piece Unstitched Lawn Suit - Royal Blue Geometric</g:title>
@@ -233,7 +251,7 @@
       <g:image_link>https://xpunjabi.github.io/a-collection-catalog/data/images/1782986173285789400_thumbnail_catalog_catalog.jpg</g:image_link>
       <g:additional_image_link>https://xpunjabi.github.io/a-collection-catalog/data/images/1782986253581506400_thumbnail_catalog_catalog.jpg</g:additional_image_link>
       <g:price>1300.00 PKR</g:price>
-      <g:availability>in stock</g:availability>
+      <g:availability>out of stock</g:availability>
       <g:brand>A Collection Narowal</g:brand>
       <g:condition>new</g:condition>
       <g:product_type>2 Piece</g:product_type>
