@@ -1,26 +1,9 @@
 {
   "brand": "A Collection Narowal",
   "whatsapp_number": "923420830995",
-  "version": "2026-07-08T15:46:12.137508400+00:00",
-  "published_at": "2026-07-08T15:46:12.137508400+00:00",
+  "version": "2026-07-15T19:03:16.982519+00:00",
+  "published_at": "2026-07-15T19:03:16.982519+00:00",
   "products": [
-    {
-      "id": 15,
-      "name": "Lawn 2-Piece Suit - Teal Floral and Mustard Yellow",
-      "sku": "AC-1783498902880",
-      "sale_price": 1300.0,
-      "retail_price": 1500.0,
-      "category": "2 Piece",
-      "color": "Teal and Mustard Yellow",
-      "fabric": "Lawn",
-      "season": "Summer",
-      "description": "This unstitched two-piece suit features a vibrant teal shirt fabric adorned with an all-over multi-colored floral print, paired with a solid mustard yellow trouser fabric. Ideal for casual summer wear, the lightweight fabric offers comfort and breathability.",
-      "images": [
-        "1783498635620515100_thumbnail_catalog.jpg",
-        "1783503995338428800_thumbnail_catalog.jpg"
-      ],
-      "availability": "low_stock"
-    },
     {
       "id": 14,
       "name": "Nishat 3-Piece Unstitched Lawn Suit - Royal Blue Geometric",
@@ -79,22 +62,6 @@
       "availability": "low_stock"
     },
     {
-      "id": 11,
-      "name": "AH Abdul Hanan Collection 2026 Digital Lawn 90/88 AllOver Print 3 Piece Suit",
-      "sku": "AH-2026-V29-DS10",
-      "sale_price": 2600.0,
-      "retail_price": 3000.0,
-      "category": "3 Piece",
-      "color": "Purple/Lavender (Multi-floral print)",
-      "fabric": "Lawn",
-      "season": "Summer",
-      "description": "AH Abdul Hanan Collection 2026 ka yeh Digital Lawn 90/88 ka 3 piece suit aapke garmiyon ko haseen banayega! Vibrant all-over floral print ke saath, isme digital same dupatta aur print trouser shamil hain. Fresh aur stylish look ke liye perfect.",
-      "images": [
-        "1782979469724478500_thumbnail_catalog.jpg"
-      ],
-      "availability": "sold_out"
-    },
-    {
       "id": 10,
       "name": "Abdul Hanan 3-Piece Digital Lawn Suit - Lavender Multi-Print",
       "sku": "DS#10",
@@ -112,23 +79,6 @@
       "availability": "low_stock"
     },
     {
-      "id": 9,
-      "name": "AH Collection 3-Piece Lawn Suit - Black Multi-color Floral",
-      "sku": "DS#25",
-      "sale_price": 2600.0,
-      "retail_price": 3000.0,
-      "category": "3 Piece",
-      "color": "Black Multi-color",
-      "fabric": "Lawn",
-      "season": "Summer",
-      "description": "90/88 all-over digital print lawn from 2026 collection.",
-      "images": [
-        "1782979998371469500_thumbnail_catalog.jpg",
-        "1782980059164622600_thumbnail_catalog.jpg"
-      ],
-      "availability": "low_stock"
-    },
-    {
       "id": 8,
       "name": "Abdul Hanan 3-Piece Digital Lawn Suit - Multi-Color Polka Dot",
       "sku": "D#22",
@@ -142,26 +92,6 @@
       "images": [
         "1782980525342660900_thumbnail_catalog.jpg",
         "1782980621432930100_thumbnail_catalog.jpg"
-      ],
-      "availability": "low_stock"
-    },
-    {
-      "id": 7,
-      "name": "Faris by Binnoor Fab 3-Piece Lawn Suit - Maroon Floral",
-      "sku": "DE-LA65-P30633",
-      "sale_price": 3100.0,
-      "retail_price": 4399.0,
-      "category": "3 Piece",
-      "color": "Maroon",
-      "fabric": "Lawn",
-      "season": "Summer",
-      "description": "Luxury quality printed lawn shirt (2.75 MTR) with premium Nino Kari dupatta (2.25 MTR) and exclusive cotton dyed trouser (2.25 MTR). Features floral and geometric prints.",
-      "images": [
-        "1782982780534349900_thumbnail_catalog.jpg",
-        "1782982843575486000_thumbnail_catalog.jpg",
-        "1782982874437036000_thumbnail_catalog.jpg",
-        "1782982906477914000_thumbnail_catalog.jpg",
-        "1782982919397549700_thumbnail_catalog.jpg"
       ],
       "availability": "low_stock"
     },
@@ -186,23 +116,6 @@
       "availability": "low_stock"
     },
     {
-      "id": 5,
-      "name": "Premium Quality 90/70 Lawn 2-Piece Suit - Bottle Green Floral",
-      "sku": "D#20",
-      "sale_price": 1300.0,
-      "retail_price": 1500.0,
-      "category": "2 Piece",
-      "color": "Bottle Green",
-      "fabric": "Lawn",
-      "season": "Summer",
-      "description": "Shirt 2.75 Mtr, Trouser 2.25 Mtr",
-      "images": [
-        "1782985519057911500_thumbnail_catalog.jpg",
-        "1782985584560312300_thumbnail_catalog.jpg"
-      ],
-      "availability": "low_stock"
-    },
-    {
       "id": 4,
       "name": "Premium 2-Piece Lawn Suit - Green Floral & Yellow",
       "sku": "D#21",
@@ -216,57 +129,6 @@
       "images": [
         "1782985853464585900_thumbnail_catalog.jpg",
         "1782985919099034000_thumbnail_catalog.jpg"
-      ],
-      "availability": "low_stock"
-    },
-    {
-      "id": 3,
-      "name": "Premium 90/70 Lawn 2-Piece Suit - Green Floral & Yellow",
-      "sku": "D#23",
-      "sale_price": 1300.0,
-      "retail_price": 1500.0,
-      "category": "2 Piece",
-      "color": "Green Floral & Yellow",
-      "fabric": "Lawn",
-      "season": "Summer",
-      "description": "Shirt 2.75 Mtr, Trouser 2.25 Mtr",
-      "images": [
-        "1782986173285789400_thumbnail_catalog.jpg",
-        "1782986253581506400_thumbnail_catalog.jpg"
-      ],
-      "availability": "sold_out"
-    },
-    {
-      "id": 2,
-      "name": "Lawn 2-Piece Suit - Terracotta Floral with Pink Trouser",
-      "sku": "D#24",
-      "sale_price": 1300.0,
-      "retail_price": 1500.0,
-      "category": "2 Piece",
-      "color": "Terracotta Floral",
-      "fabric": "Lawn",
-      "season": "Summer",
-      "description": "Shirt: 2.75 Mtr, Trouser: 2.25 Mtr. Trouser in solid light pink.",
-      "images": [
-        "1782986797334806000_thumbnail_catalog.jpg",
-        "1782986915674922500_thumbnail_catalog.jpg"
-      ],
-      "availability": "low_stock"
-    },
-    {
-      "id": 1,
-      "name": "Premium Lawn 2-Piece Suit - Yellow and Dark Green Floral",
-      "sku": "D#26",
-      "sale_price": 1300.0,
-      "retail_price": 1500.0,
-      "category": "2 Piece",
-      "color": "Yellow and Dark Green Floral",
-      "fabric": "Lawn",
-      "season": "Summer",
-      "description": "Premium quality. Shirt: 2.75 Mtr, Trouser: 2.25 Mtr.",
-      "images": [
-        "1782987117614720200_thumbnail_catalog.jpg",
-        "1782987214782464800_thumbnail_catalog.jpg"
       ],
       "availability": "low_stock"
     }
